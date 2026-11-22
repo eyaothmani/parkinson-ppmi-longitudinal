@@ -1,0 +1,63 @@
+{
+  "cv_MAE": {
+    "GRU – trajectoire (M1)": 6.0546,
+    "MLP – dernière visite (M1)": 6.065,
+    "LightGBM (M1)": 6.0669,
+    "LightGBM (M1) – une seule visite": 6.3102,
+    "LightGBM (M1) – sans état cible": 6.3128,
+    "MLP – dernière visite (M1) – une seule visite": 6.3277,
+    "GRU – trajectoire (M1) – sans état cible": 6.3368,
+    "MLP – dernière visite (M1) – sans état cible": 6.3532,
+    "Persistance": 7.0591
+  },
+  "comparaisons": [
+    {
+      "comparaison": "LightGBM (M1) – sans état cible − LightGBM (M1)",
+      "diff_MAE": 0.2462,
+      "IC95_bas": 0.1848,
+      "IC95_haut": 0.3096
+    },
+    {
+      "comparaison": "LightGBM (M1) – sans état cible − Persistance",
+      "diff_MAE": -0.747,
+      "IC95_bas": -0.8455,
+      "IC95_haut": -0.6442
+    },
+    {
+      "comparaison": "MLP – dernière visite (M1) – sans état cible − MLP – dernière visite (M1)",
+      "diff_MAE": 0.2888,
+      "IC95_bas": 0.2144,
+      "IC95_haut": 0.3669
+    },
+    {
+      "comparaison": "MLP – dernière visite (M1) – sans état cible − Persistance",
+      "diff_MAE": -0.7068,
+      "IC95_bas": -0.8292,
+      "IC95_haut": -0.5828
+    },
+    {
+      "comparaison": "GRU – trajectoire (M1) – sans état cible − GRU – trajectoire (M1)",
+      "diff_MAE": 0.2826,
+      "IC95_bas": 0.2041,
+      "IC95_haut": 0.3647
+    },
+    {
+      "comparaison": "GRU – trajectoire (M1) – sans état cible − Persistance",
+      "diff_MAE": -0.7235,
+      "IC95_bas": -0.8612,
+      "IC95_haut": -0.5898
+    },
+    {
+      "comparaison": "LightGBM (M1) – une seule visite − LightGBM (M1)",
+      "diff_MAE": 0.2434,
+      "IC95_bas": 0.1856,
+      "IC95_haut": 0.3021
+    },
+    {
+      "comparaison": "MLP – dernière visite (M1) – une seule visite − MLP – dernière visite (M1)",
+      "diff_MAE": 0.2631,
+      "IC95_bas": 0.1873,
+      "IC95_haut": 0.333
+    }
+  ]
+}

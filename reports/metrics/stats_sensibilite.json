@@ -1,0 +1,85 @@
+{
+  "forme_du_temps": {
+    "AIC_lineaire": 93118.90980584048,
+    "AIC_quadratique": 93053.27998129146,
+    "terme_quadratique": -0.06283034306491625,
+    "LRT_p": 1.972609704420214e-16,
+    "pente_an_1": 2.3388947897295664,
+    "pente_an_5": 1.8362520452102364,
+    "pente_lineaire": 1.8874339657900825
+  },
+  "analyses": [
+    {
+      "analyse": "H&Y ≥ 2 : analyse principale",
+      "effet_pts_an": -0.455,
+      "IC95_bas": -0.7376,
+      "IC95_haut": -0.1725,
+      "p": 0.0016,
+      "n_patients": 1512,
+      "converge": true
+    },
+    {
+      "analyse": "H&Y ≥ 2 : + vitesse ajustée sur le score initial",
+      "effet_pts_an": -0.1188,
+      "IC95_bas": -0.4612,
+      "IC95_haut": 0.2235,
+      "p": 0.4963,
+      "n_patients": 1512,
+      "converge": true
+    },
+    {
+      "analyse": "H&Y ≥ 2 : examens non traités ou OFF seulement",
+      "effet_pts_an": -0.3831,
+      "IC95_bas": -0.6941,
+      "IC95_haut": -0.0721,
+      "p": 0.0158,
+      "n_patients": 1480,
+      "converge": true
+    },
+    {
+      "analyse": "GBA : analyse principale",
+      "effet_pts_an": 0.1189,
+      "IC95_bas": -0.3366,
+      "IC95_haut": 0.5745,
+      "p": 0.6089,
+      "n_patients": 1135,
+      "converge": true
+    },
+    {
+      "analyse": "GBA : examens non traités ou OFF seulement",
+      "effet_pts_an": 0.29,
+      "IC95_bas": -0.2442,
+      "IC95_haut": 0.8242,
+      "p": 0.2874,
+      "n_patients": 1116,
+      "converge": true
+    },
+    {
+      "analyse": "De novo, 5 ans : vitesse ajustée (âge, sexe, durée, état)",
+      "effet_pts_an": 2.3526,
+      "IC95_bas": 2.1353,
+      "IC95_haut": 2.5699,
+      "p": 0.0,
+      "n_patients": 1173,
+      "converge": true
+    },
+    {
+      "analyse": "De novo, 5 ans : vitesse brute",
+      "effet_pts_an": 1.5323,
+      "IC95_bas": 1.3419,
+      "IC95_haut": 1.7226,
+      "p": 0.0,
+      "n_patients": 1173,
+      "converge": true
+    },
+    {
+      "analyse": "Holden et al. 2018 (référence publiée, de novo PPMI)",
+      "effet_pts_an": 2.4,
+      "IC95_bas": NaN,
+      "IC95_haut": NaN,
+      "p": NaN,
+      "n_patients": 362,
+      "converge": true
+    }
+  ]
+}

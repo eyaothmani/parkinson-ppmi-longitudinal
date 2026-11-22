@@ -1,0 +1,144 @@
+# Pipeline reproductible : `dvc repro` ne relance que les étapes dont une dépendance a changé.
+# Les sorties lourdes (données, modèle) sont suivies par DVC, jamais par Git.
+stages:
+  ingest:
+    cmd: python scripts/prepare_data.py --stage ingest
+    deps: [data/raw, src/parkinson_mm/data]
+    params: [cohort, cleaning]
+    outs: [data/interim/pd_longitudinal.csv, data/interim/pd_patients.csv]
+    metrics: [{reports/metrics/ingest.json: {cache: false}}]
+  validate:
+    cmd: python scripts/prepare_data.py --stage validate
+    deps: [data/interim, src/parkinson_mm/data/validation]
+    outs: [data/processed/pd_longitudinal.csv, data/processed/pd_patients.csv]
+    metrics: [{reports/metrics/validate.json: {cache: false}}]
+  split:
+    cmd: python scripts/prepare_data.py --stage split
+    deps: [data/processed/pd_longitudinal.csv, src/parkinson_mm/data/split.py]
+    params: [split]
+    outs: [data/processed/splits.csv]
+  features:
+    cmd: python scripts/prepare_data.py --stage features
+    deps: [data/processed/pd_longitudinal.csv, data/processed/pd_patients.csv, data/processed/splits.csv,
+           src/parkinson_mm/features]
+    params: [samples]
+    outs: [data/processed/pd_next_visit_samples.csv]
+  stats:
+    cmd: python scripts/run_stats.py
+    deps: [data/processed/pd_longitudinal.csv, data/processed/pd_patients.csv, src/parkinson_mm/stats]
+    params: [stats]
+    outs: [reports/tables/stats, data/processed/pd_score_evolution.csv]
+    metrics: [{reports/metrics/stats.json: {cache: false}}]
+  state:
+    cmd: python scripts/run_state.py
+    deps: [data/processed/pd_longitudinal.csv, data/processed/pd_patients.csv, data/processed/splits.csv,
+           data/processed/pd_next_visit_samples.csv, src/parkinson_mm/stats]
+    params: [stats.min_visits, evaluation.bootstrap_samples]
+    outs: [data/processed/pd_score_etat.csv, models/state_model.pkl, reports/tables/state]
+    metrics: [{reports/metrics/state.json: {cache: false}}]
+  train:
+    cmd: python scripts/train.py
+    deps: [data/processed/pd_next_visit_samples.csv, src/parkinson_mm/training, src/parkinson_mm/models]
+    params: [training, experiments, project.seed]
+    outs: [reports/tables/models/cv_predictions.csv, reports/tables/models/cv_summary.csv]
+    metrics: [{reports/metrics/cv.json: {cache: false}}]
+  evaluate:
+    cmd: python scripts/evaluate.py
+    deps: [reports/tables/models/cv_summary.csv, src/parkinson_mm/evaluation, src/parkinson_mm/pipeline]
+    params: [evaluation, promotion, tracking]
+    outs: [models/predictor.pkl, reports/tables/models/test_results.csv]
+    metrics: [{reports/metrics/test.json: {cache: false}}]
+  explain:
+    cmd: python scripts/explain.py
+    deps: [models/predictor.pkl, src/parkinson_mm/explainability]
+    params: [explain]
+    outs: [reports/tables/models/importance_permutation.csv]
+    metrics: [{reports/metrics/explain.json: {cache: false}}]
+  # ---- sprint 5 (ADR-0018) : deep learning central, MDS-UPDRS III à 12, 24 et 36 mois
+  horizons:
+    cmd: python scripts/run_horizons.py --stage data
+    deps: [data/processed/pd_longitudinal.csv, data/processed/pd_patients.csv, data/processed/splits.csv,
+           src/parkinson_mm/features/horizons.py, src/parkinson_mm/data/validation/horizons.py]
+    params: [horizons.months, horizons.tolerance_months, horizons.auxiliary]
+    outs: [data/processed/pd_multi_horizon_samples.csv]
+    metrics: [{reports/metrics/horizons_data.json: {cache: false}}]
+  train_horizons:
+    cmd: python scripts/run_horizons.py --stage train
+    deps: [data/processed/pd_multi_horizon_samples.csv, data/processed/pd_longitudinal.csv,
+           src/parkinson_mm/features/grud.py, src/parkinson_mm/models/grud.py, src/parkinson_mm/models/multi_horizon.py,
+           src/parkinson_mm/training/horizon_cv.py, src/parkinson_mm/training/horizon_fit.py,
+           src/parkinson_mm/training/horizon_inputs.py, src/parkinson_mm/training/horizon_loop.py,
+           src/parkinson_mm/training/horizon_loss.py, src/parkinson_mm/training/horizon_model.py,
+           src/parkinson_mm/training/horizon_networks.py, src/parkinson_mm/training/horizon_tuning.py,
+           src/parkinson_mm/pipeline/horizon_train.py, src/parkinson_mm/pipeline/horizon_tune.py]
+    params: [training, horizons, project.seed, split.n_folds, samples.max_seq_len]
+    outs: [reports/tables/horizons/cv_predictions.csv, reports/tables/horizons/cv_summary.csv]
+    metrics: [{reports/metrics/horizons_cv.json: {cache: false}}, {reports/metrics/horizons_reglages.json: {cache: false}}]
+  evaluate_horizons:
+    cmd: python scripts/run_horizons.py --stage evaluate
+    deps: [reports/tables/horizons/cv_summary.csv, reports/metrics/horizons_reglages.json,
+           data/processed/pd_score_evolution.csv, src/parkinson_mm/evaluation/hypotheses.py,
+           src/parkinson_mm/pipeline/horizon_evaluate.py, src/parkinson_mm/pipeline/horizon_release.py,
+           src/parkinson_mm/serving/horizon_predictor.py]
+    params: [horizons, promotion, evaluation.bootstrap_samples]
+    outs: [models/horizon_predictor.pkl, reports/tables/horizons/test_predictions.csv,
+           reports/tables/horizons/test_summary.csv]
+    metrics: [{reports/metrics/horizons_test.json: {cache: false}}]
+  robustesse:                      # sprint 6 : erreurs par sous-groupe et intervalle conforme (CV seulement)
+    cmd: python scripts/run_robustesse.py
+    deps: [reports/tables/models/cv_predictions.csv, data/processed/pd_next_visit_samples.csv,
+           src/parkinson_mm/evaluation/subgroups.py, src/parkinson_mm/evaluation/robustness.py,
+           src/parkinson_mm/evaluation/conformal.py, src/parkinson_mm/pipeline/robustness_stage.py]
+    params: [robustesse, evaluation.bootstrap_samples]
+    outs: [reports/tables/robustesse, reports/figures/robustesse]
+    metrics: [{reports/metrics/robustesse.json: {cache: false}}]
+  reference_etat:                  # référence juste de l'objectif 2 : persistance ajustée à l'état (CV seulement)
+    cmd: python scripts/run_reference_etat.py
+    deps: [reports/tables/models/cv_predictions.csv, data/processed/pd_next_visit_samples.csv,
+           src/parkinson_mm/analysis, src/parkinson_mm/evaluation/bootstrap.py, src/parkinson_mm/evaluation/metrics.py]
+    params: [reference_etat, evaluation.bootstrap_samples]
+    outs: [reports/tables/reference_etat]
+    metrics: [{reports/metrics/reference_etat.json: {cache: false}}]
+  # ---- phase 3 : analyses de sensibilité (CV seulement pour la prédiction ; le test n'est pas relu)
+  reference_horizons:              # persistance ajustée à l'état à 12, 24 et 36 mois
+    cmd: python scripts/run_reference_horizons.py
+    deps: [reports/tables/horizons/cv_predictions.csv, data/processed/pd_multi_horizon_samples.csv,
+           src/parkinson_mm/analysis, src/parkinson_mm/evaluation/bootstrap.py,
+           src/parkinson_mm/evaluation/horizon_metrics.py]
+    params: [reference_etat, horizons.months, horizons.mcid_points, evaluation.bootstrap_samples]
+    outs: [reports/tables/reference_horizons]
+    metrics: [{reports/metrics/reference_horizons.json: {cache: false}}]
+  etat_cv:                         # objectif 1 en validation croisée, face aux deux persistances et au GRU
+    cmd: python scripts/run_etat_cv.py
+    deps: [data/processed/pd_longitudinal.csv, data/processed/pd_patients.csv, data/processed/splits.csv,
+           data/processed/pd_next_visit_samples.csv, reports/tables/models/cv_predictions.csv,
+           src/parkinson_mm/analysis, src/parkinson_mm/stats]
+    params: [reference_etat, stats.min_visits, evaluation.bootstrap_samples]
+    outs: [reports/tables/etat_cv]
+    metrics: [{reports/metrics/etat_cv.json: {cache: false}}]
+  sensibilite:                     # modèles sans l'état de l'examen cible ; modèles « une seule visite » (RQ1)
+    cmd: python scripts/run_sensibilite.py
+    deps: [data/processed/pd_longitudinal.csv, data/processed/pd_next_visit_samples.csv,
+           reports/tables/models/cv_predictions.csv, src/parkinson_mm/analysis, src/parkinson_mm/training,
+           src/parkinson_mm/models, src/parkinson_mm/features]
+    params: [sensibilite, training, split.n_folds, evaluation.bootstrap_samples]
+    outs: [reports/tables/sensibilite]
+    metrics: [{reports/metrics/sensibilite.json: {cache: false}}]
+  stats_sensibilite:               # objectif 3 : forme du temps, H&Y ≥ 2, GBA, vitesse des de novo
+    cmd: python scripts/run_stats_sensibilite.py
+    deps: [data/processed/pd_longitudinal.csv, data/processed/pd_patients.csv, src/parkinson_mm/analysis,
+           src/parkinson_mm/stats]
+    params: [stats.min_visits]
+    outs: [reports/tables/stats_sensibilite]
+    metrics: [{reports/metrics/stats_sensibilite.json: {cache: false}}]
+  rag_index:                       # extension : assistant documentaire (séparé du pipeline PPMI)
+    cmd: python scripts/build_rag_index.py
+    deps: [rag/corpus, rag/manifest.yaml, README.md, src/parkinson_mm/rag/corpus.py, src/parkinson_mm/rag/extract.py,
+           src/parkinson_mm/rag/chunks.py, src/parkinson_mm/rag/embed.py, src/parkinson_mm/rag/index.py]
+    params: [rag.manifest, rag.embedding_model, rag.chunk_size, rag.chunk_overlap]
+    outs: [rag/index]
+  rag_eval:                        # recherche + garde-fou, sans LLM (déterministe) ; avec LLM : eval_rag.py --llm
+    cmd: python scripts/eval_rag.py
+    deps: [rag/index, rag/eval/questions.yaml, src/parkinson_mm/rag]
+    params: [rag.k, rag.questions]
+    metrics: [{reports/metrics/rag.json: {cache: false}}]

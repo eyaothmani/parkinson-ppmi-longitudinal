@@ -1,0 +1,181 @@
+{
+  "fast_mode": false,
+  "reglages": {
+    "lgbm": {},
+    "mlp": {
+      "lr": 0.00030288904216477474,
+      "d": 128,
+      "dropout": 0.14818388241394756,
+      "weight_decay": 8.691837985677528e-05
+    },
+    "grud": {
+      "lr": 0.00016085381438354858,
+      "d": 128,
+      "dropout": 0.002944907900402205,
+      "weight_decay": 0.00037484243895631353
+    }
+  },
+  "cv": {
+    "GRU-D multi-horizon": {
+      "12_mois": {
+        "MAE": 6.5493,
+        "MAE_sd": 0.1075,
+        "RMSE": 8.6748,
+        "couverture_10_90": 0.7843,
+        "part_mcid": 0.3307
+      },
+      "24_mois": {
+        "MAE": 7.6487,
+        "MAE_sd": 0.2261,
+        "RMSE": 10.0492,
+        "couverture_10_90": 0.7781,
+        "part_mcid": 0.2828
+      },
+      "36_mois": {
+        "MAE": 8.4863,
+        "MAE_sd": 0.5191,
+        "RMSE": 11.0511,
+        "couverture_10_90": 0.7767,
+        "part_mcid": 0.2521
+      }
+    },
+    "GRU-D sans masques": {
+      "12_mois": {
+        "MAE": 6.5691,
+        "MAE_sd": 0.0635,
+        "RMSE": 8.6973,
+        "couverture_10_90": 0.7712,
+        "part_mcid": 0.3353
+      },
+      "24_mois": {
+        "MAE": 7.6961,
+        "MAE_sd": 0.1401,
+        "RMSE": 10.0912,
+        "couverture_10_90": 0.7546,
+        "part_mcid": 0.2785
+      },
+      "36_mois": {
+        "MAE": 8.545,
+        "MAE_sd": 0.5205,
+        "RMSE": 11.0859,
+        "couverture_10_90": 0.7527,
+        "part_mcid": 0.2505
+      }
+    },
+    "GRU-D sans multitâche": {
+      "12_mois": {
+        "MAE": 6.5431,
+        "MAE_sd": 0.107,
+        "RMSE": 8.6795,
+        "couverture_10_90": 0.7834,
+        "part_mcid": 0.3358
+      },
+      "24_mois": {
+        "MAE": 7.6456,
+        "MAE_sd": 0.2275,
+        "RMSE": 10.0565,
+        "couverture_10_90": 0.771,
+        "part_mcid": 0.2869
+      },
+      "36_mois": {
+        "MAE": 8.4806,
+        "MAE_sd": 0.4962,
+        "RMSE": 11.0355,
+        "couverture_10_90": 0.7699,
+        "part_mcid": 0.2467
+      }
+    },
+    "GRU-D sans temps écoulé": {
+      "12_mois": {
+        "MAE": 6.5527,
+        "MAE_sd": 0.111,
+        "RMSE": 8.6817,
+        "couverture_10_90": 0.784,
+        "part_mcid": 0.3327
+      },
+      "24_mois": {
+        "MAE": 7.6633,
+        "MAE_sd": 0.2301,
+        "RMSE": 10.0625,
+        "couverture_10_90": 0.7739,
+        "part_mcid": 0.2868
+      },
+      "36_mois": {
+        "MAE": 8.4949,
+        "MAE_sd": 0.5153,
+        "RMSE": 11.0447,
+        "couverture_10_90": 0.7721,
+        "part_mcid": 0.2521
+      }
+    },
+    "LightGBM (un par horizon)": {
+      "12_mois": {
+        "MAE": 6.6204,
+        "MAE_sd": 0.1194,
+        "RMSE": 8.7514,
+        "couverture_10_90": null,
+        "part_mcid": 0.3277
+      },
+      "24_mois": {
+        "MAE": 7.7803,
+        "MAE_sd": 0.2361,
+        "RMSE": 10.2072,
+        "couverture_10_90": null,
+        "part_mcid": 0.2807
+      },
+      "36_mois": {
+        "MAE": 8.5162,
+        "MAE_sd": 0.4778,
+        "RMSE": 11.1141,
+        "couverture_10_90": null,
+        "part_mcid": 0.2548
+      }
+    },
+    "MLP – dernière visite, multi-sortie": {
+      "12_mois": {
+        "MAE": 6.57,
+        "MAE_sd": 0.1302,
+        "RMSE": 8.6737,
+        "couverture_10_90": 0.7842,
+        "part_mcid": 0.3305
+      },
+      "24_mois": {
+        "MAE": 7.6236,
+        "MAE_sd": 0.2477,
+        "RMSE": 10.0027,
+        "couverture_10_90": 0.7807,
+        "part_mcid": 0.2818
+      },
+      "36_mois": {
+        "MAE": 8.4274,
+        "MAE_sd": 0.5072,
+        "RMSE": 10.9629,
+        "couverture_10_90": 0.7773,
+        "part_mcid": 0.2499
+      }
+    },
+    "Persistance": {
+      "12_mois": {
+        "MAE": 7.4659,
+        "MAE_sd": 0.0546,
+        "RMSE": 9.9768,
+        "couverture_10_90": null,
+        "part_mcid": 0.3239
+      },
+      "24_mois": {
+        "MAE": 9.0712,
+        "MAE_sd": 0.2224,
+        "RMSE": 11.8371,
+        "couverture_10_90": null,
+        "part_mcid": 0.2577
+      },
+      "36_mois": {
+        "MAE": 10.1843,
+        "MAE_sd": 0.5637,
+        "RMSE": 13.3032,
+        "couverture_10_90": null,
+        "part_mcid": 0.2276
+      }
+    }
+  }
+}

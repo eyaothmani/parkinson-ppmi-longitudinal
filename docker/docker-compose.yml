@@ -1,0 +1,34 @@
+# docker compose -f docker/docker-compose.yml run --rm train scripts/prepare_data.py   (puis train.py, evaluate.py)
+# docker compose -f docker/docker-compose.yml up mlflow   -> interface MLflow sur http://localhost:5000
+# docker compose -f docker/docker-compose.yml up api      -> tableau de bord http://localhost:8000/ (Swagger : /docs)
+# Le projet est monté sur /project dans tous les services : les chemins d'artefacts MLflow restent valides.
+services:
+  mlflow:                                 # construit depuis l'image du projet : même MLflow que uv.lock (schéma de mlflow.db)
+    build: {context: .., dockerfile: docker/Dockerfile.train}
+    command: [-m, mlflow, server, --backend-store-uri, "sqlite:////project/mlflow.db", --default-artifact-root,
+              /project/mlruns, --host, 0.0.0.0, --port, "5000"]
+    volumes: ["..:/project"]
+    ports: ["5000:5000"]
+
+  train:
+    build: {context: .., dockerfile: docker/Dockerfile.train}
+    profiles: [train]
+    env_file:                              # .env est facultatif (jamais versionné, voir .env.example)
+      - {path: ../.env, required: false}
+    environment:
+      MLFLOW_TRACKING_URI: sqlite:////project/mlflow.db
+    volumes: ["..:/project"]
+
+  api:                                    # API + tableau de bord ; l'assistant documentaire n'est pas dans l'image (503)
+    build: {context: .., dockerfile: docker/Dockerfile.api}
+    env_file:
+      - {path: ../.env, required: false}
+    environment:
+      MLFLOW_TRACKING_URI: sqlite:////project/mlflow.db
+      STATE_MODEL_PATH: /project/models/state_model.pkl     # objectif 1
+      PROJECT_ROOT: /project                                 # objectif 3 et /summary : résultats agrégés
+    volumes: ["..:/project"]              # écriture nécessaire aux verrous SQLite ; image en lecture seule
+    ports: ["8000:8000"]
+    depends_on: [mlflow]
+    read_only: true
+    tmpfs: [/tmp]

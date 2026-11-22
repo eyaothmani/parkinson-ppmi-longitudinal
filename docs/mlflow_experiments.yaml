@@ -1,0 +1,68 @@
+# Catalogue des experiments MLflow (ADR-0022). Règle : un experiment = des runs qu'on compare ENTRE EUX
+# (même protocole, mêmes patients, même métrique). Validation croisée, test et analyses complémentaires ne se
+# mélangent pas. `description` s'affiche en tête de l'experiment (tag mlflow.note.content) ; `tags` servent à filtrer
+# la liste des experiments. Lu à la création d'un experiment (training/experiments.py).
+experiments:
+  objectif1_score_actuel:
+    tags: {objectif: "1", contenu: "modèle statistique", reference: "README"}
+    description: |
+      Objectif 1 — score actuel. Un run : modèle mixte (intercept et pente par patient, BLUP) ajusté sur le dev,
+      vérifié sur le test. Métriques : `test_MAE`, `test_skill_vs_persistance_pct`, `test_couverture_80`.
+      Le modèle (`state_model.pkl`) est en artefact.
+
+  objectif2_score_futur:
+    tags: {objectif: "2", contenu: "validation croisée", reference: "ADR-0015"}
+    description: |
+      Objectif 2 — visite suivante, validation croisée (patients du dev seulement). Les 4 modèles comparés sur les
+      mêmes plis : Persistance, LightGBM, MLP, GRU. Un run par modèle, un run imbriqué par pli.
+      **Comparer** : `cv_MAE` (le plus bas gagne) et `cv_MAE_sd` (stabilité). Le choix du modèle se fait ici.
+      Run de référence « Persistance ajustée à l'état » (étape reference_etat, sans plis imbriqués) : la persistance
+      qui connaît, comme les modèles, l'état ON/OFF de l'examen à prédire.
+      Le test de ces modèles est dans `objectif2_score_futur_test`.
+
+  objectif2_score_futur_test:
+    tags: {objectif: "2", contenu: "test", reference: "ADR-0004, ADR-0017"}
+    description: |
+      Objectif 2 — visite suivante, TEST (303 patients jamais vus). Un run `TEST – <modèle>` par modèle, ouvert
+      une seule fois, APRÈS le choix fait en validation croisée (`objectif2_score_futur`). Métriques `test_*` ;
+      chaque run est lié à une version du registered model `parkinson-next-visit-updrs3` (champion = GRU).
+      Nommé `evaluation` avant l'ADR-0022.
+
+  objectif2_multi_horizon:
+    tags: {objectif: "2", contenu: "validation croisée", reference: "ADR-0018"}
+    description: |
+      Objectif 2 — 12, 24 et 36 mois, validation croisée. Les 4 modèles comparés : Persistance, LightGBM,
+      MLP multi-sortie, GRU-D. Un run par modèle, un run imbriqué par pli.
+      **Comparer** : `cv_MAE_24m` (horizon de choix), puis `cv_MAE_12m` et `cv_MAE_36m`.
+      Le test est dans `objectif2_multi_horizon_test`.
+
+  objectif2_multi_horizon_test:
+    tags: {objectif: "2", contenu: "test", reference: "ADR-0018"}
+    description: |
+      Objectif 2 — 12, 24 et 36 mois, TEST. Un run `TEST – <modèle>` par modèle, après le tag
+      `gel-multi-horizon` (test ouvert une seule fois). Lié au registered model `parkinson-multi-horizon-updrs3`
+      (champion = MLP, alias `grud` pour le GRU-D).
+
+  objectif2_robustesse:
+    tags: {objectif: "2", contenu: "analyse complémentaire", reference: "sprint 6"}
+    description: |
+      Objectif 2 — robustesse du modèle retenu (GRU), validation croisée seulement : le test n'est pas relu.
+      Un run : MAE par sous-groupe (stade, état de l'examen, durée de maladie, génétique, sexe, âge, période
+      d'inclusion) avec IC bootstrap patient, et couverture de l'intervalle à 80 % (prédiction conforme pli par pli).
+      Tableaux et figures en artefacts. **Lire** `couverture_globale`, `groupe_MAE_max`, `groupe_couverture_min`.
+
+  objectif3_facteurs:
+    tags: {objectif: "3", contenu: "statistiques", reference: "README"}
+    description: |
+      Objectif 3 — facteurs associés à la vitesse d'évolution. Un run : criblage par modèles mixtes (LME) avec
+      correction FDR de Benjamini-Hochberg. Métriques : `pente_moyenne`, `ecart_type_pentes`,
+      `facteurs_significatifs` ; tableaux en artefacts. Associations, pas causalité.
+
+  extension_rag:
+    tags: {objectif: "extension", contenu: "assistant documentaire", reference: "rag/README.md"}
+    description: |
+      Extension — assistant documentaire (RAG), séparé de l'analyse PPMI : il ne lit que des articles publiés et le
+      README du projet, jamais de donnée patient. Questions de référence écrites avant la mesure
+      (`rag/eval/questions.yaml`). Run « Recherche seule » : `hit_at_5`, `mrr`, `refus_corrects`, `faux_refus`.
+      Run « Recherche + LLM » : en plus `reponses_sourcees`, `reponses_rejetees`, `introuvable_hors_corpus`.
+      Artefact `questions.csv` : statut, rang du bon document et sources de chaque question.

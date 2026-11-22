@@ -1,0 +1,11 @@
+{
+  "modele": "GRU – trajectoire (M1)",
+  "couverture_globale": 0.8005737234652898,
+  "demi_largeur_moyenne": 9.460079771721425,
+  "groupe_MAE_max": "Stade (Hoehn & Yahr) · H&Y ≥ 3",
+  "MAE_max": 8.539010545022894,
+  "groupe_MAE_min": "Stade (Hoehn & Yahr) · H&Y 0–1",
+  "MAE_min": 4.651209756648768,
+  "groupe_couverture_min": "Stade (Hoehn & Yahr) · H&Y ≥ 3",
+  "couverture_min": 0.6394927536231884
+}

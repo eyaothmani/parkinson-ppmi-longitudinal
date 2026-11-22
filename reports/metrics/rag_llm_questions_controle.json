@@ -1,0 +1,12 @@
+{
+  "n_questions": 9,
+  "n_corpus": 7,
+  "hit_at_5": 1.0,
+  "mrr": 0.7905,
+  "refus_corrects": 1.0,
+  "faux_refus": 0.0,
+  "reponses_sourcees": 0.5714,
+  "reponses_rejetees": 0,
+  "introuvable_hors_corpus": 1.0,
+  "introuvable_sur_corpus": 0.4286
+}

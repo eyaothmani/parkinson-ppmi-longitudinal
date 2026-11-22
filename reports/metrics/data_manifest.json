@@ -1,0 +1,121 @@
+{
+  "data_version": "11b646628e45",
+  "n_files": 23,
+  "files": [
+    {
+      "path": "Biospecimen_Analysis/Current_Biospecimen_Analysis_Results_07Oct2026.csv",
+      "bytes": 185963135,
+      "sha256": "a6d4a4fbb5b34be93c21ca7b9399423580fb38b198e085f33a1f5c4476092aa4"
+    },
+    {
+      "path": "DaTSCAN/Xing_Core_Lab_-_Quant_SBR_04Oct2026.csv",
+      "bytes": 3044669,
+      "sha256": "234804a518852339367969417b4f76a8dcb57a84672f1fe2f911cbabdafccd4f"
+    },
+    {
+      "path": "Family_History_04Oct2026.csv",
+      "bytes": 1893502,
+      "sha256": "69672ef085486b8ebcc5a5da51d4da1a8039d02187ef37584dcb98e2f7969dcb"
+    },
+    {
+      "path": "Genetic_Status/Polygenic_Risk_Scores_04Oct2026.csv",
+      "bytes": 489175,
+      "sha256": "31c07b45b4a2190213db289cdc7074e2ba24491172a378c245eeae1fdbe3261f"
+    },
+    {
+      "path": "Genetic_Status/iu_genetic_consensus_20251025_04Oct2026.csv",
+      "bytes": 673594,
+      "sha256": "2b919de0cf2d0838502daf49c7ace04cd2c6582abc804e4088f83666caf188d2"
+    },
+    {
+      "path": "MR_Analysis_Results/FS7_ASEG_VOL_04Oct2026.csv",
+      "bytes": 1009897,
+      "sha256": "cfe20d2ff89a329439add14771c6999716324e8ae7bd6a6cba19ce1f930ac31d"
+    },
+    {
+      "path": "Medical/LEDD_Concomitant_Medication_Log_07Oct2026.csv",
+      "bytes": 1512438,
+      "sha256": "53f4ef4b9d5d6841a75a272598fea74ecc8e476b49924e15d99a2eb2b8862f7f"
+    },
+    {
+      "path": "Medical/PD_Diagnosis_History_07Oct2026.csv",
+      "bytes": 272227,
+      "sha256": "fd2903dba760fba78519c1dc8a7e29994e392524e9dc38d3525f51dcbe879b80"
+    },
+    {
+      "path": "Motor___MDS-UPDRS/MDS-UPDRS_Part_III_04Oct2026.csv",
+      "bytes": 12683934,
+      "sha256": "ee5e436a12fcc2a13825dc1d7f7e773f99d91e492f73ba6107b004c83dc06e55"
+    },
+    {
+      "path": "Motor___MDS-UPDRS/MDS-UPDRS_Part_IV__Motor_Complications_04Oct2026.csv",
+      "bytes": 1560533,
+      "sha256": "18b1548f5c495cbb745b373a2cc8cbcef6a380d157491fc5571af9ca3da0d9f7"
+    },
+    {
+      "path": "Motor___MDS-UPDRS/MDS-UPDRS_Part_I_04Oct2026.csv",
+      "bytes": 3700122,
+      "sha256": "cf8ee78a1d856a1e92015382f70c3e49eba7cb822123d6ac0d1e6eb3f21c7e71"
+    },
+    {
+      "path": "Motor___MDS-UPDRS/MDS-UPDRS_Part_I_Patient_Questionnaire_04Oct2026.csv",
+      "bytes": 4487560,
+      "sha256": "77df323c0dbde4e7fdc9684fc25ffe5c8235e06131324b5534448e72a9c6cffc"
+    },
+    {
+      "path": "Motor___MDS-UPDRS/MDS_UPDRS_Part_II__Patient_Questionnaire_04Oct2026.csv",
+      "bytes": 5419081,
+      "sha256": "614092b6b02f747471778c32956a1f6a1c59fe553e2583e90244c0cbb0eeb0c0"
+    },
+    {
+      "path": "Motor___MDS-UPDRS/Modified_Schwab___England_Activities_of_Daily_Living_04Oct2026.csv",
+      "bytes": 2732890,
+      "sha256": "9e2d76a0559fba1ef573a47f27dce2319f1122afc6d8f26bef4ea583e95c375a"
+    },
+    {
+      "path": "Non-motor_Assessments/Epworth_Sleepiness_Scale_07Oct2026.csv",
+      "bytes": 2518195,
+      "sha256": "680b9fedeb0da7e773cb6367a7e12b087aaf8d7c6efd81ed5c21a2e4b659ad19"
+    },
+    {
+      "path": "Non-motor_Assessments/Geriatric_Depression_Scale__Short_Version__07Oct2026.csv",
+      "bytes": 3110444,
+      "sha256": "28eec187c07f8ef30e7693112fa69506e7acbc95ba94f477385166ec9cf5d809"
+    },
+    {
+      "path": "Non-motor_Assessments/Montreal_Cognitive_Assessment__MoCA__07Oct2026.csv",
+      "bytes": 3951719,
+      "sha256": "2825392dac4b352cf837726e5bdefc6583ab98f63cf420ca5a38235b6b31004e"
+    },
+    {
+      "path": "Non-motor_Assessments/SCOPA-AUT_07Oct2026.csv",
+      "bytes": 5285895,
+      "sha256": "93941f3d49b8f6f7c03d153ba789edbb1079ab93061b75510f0176e86f4e95d6"
+    },
+    {
+      "path": "Non-motor_Assessments/State-Trait_Anxiety_Inventory_for_Adults_07Oct2026.csv",
+      "bytes": 5263168,
+      "sha256": "101760a1a2fdf6dca77f0d0baef8bebb94dd24c7115c97befad0546611291ba7"
+    },
+    {
+      "path": "Participant_Status_04Oct2026.csv",
+      "bytes": 1650156,
+      "sha256": "9fc2458dde7cc302c1bf9865ca9b3131e7151d7e0a3aa4f4c5dc3a3353606a9f"
+    },
+    {
+      "path": "Subject_Demographics/Age_at_visit_04Oct2026.csv",
+      "bytes": 1069960,
+      "sha256": "4c21536fddd700759cfe39c41d400a1c43e700a887907e806f03014cdb5c2e33"
+    },
+    {
+      "path": "Subject_Demographics/Demographics_04Oct2026.csv",
+      "bytes": 1547204,
+      "sha256": "cfb52848581a84e184a3f438638d86f3c041c877bda1f7271bf00a42dc690ee1"
+    },
+    {
+      "path": "Subject_Demographics/Socio-Economics_04Oct2026.csv",
+      "bytes": 982445,
+      "sha256": "f32b9f0752aa0f9d0e6fea9b23d088b94791bd4e243dc6964917b28f20541e89"
+    }
+  ]
+}

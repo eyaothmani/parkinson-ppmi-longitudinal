@@ -1,0 +1,141 @@
+{
+  "selected": "GRU – trajectoire (M1)",
+  "test": {
+    "GRU – trajectoire (M1)": {
+      "MAE": 6.092129586562368,
+      "RMSE": 8.212769421194864,
+      "R2": 0.5959849714368295,
+      "R2_delta": 0.309480625962013,
+      "spearman": 0.7687978194226895,
+      "skill_vs_persistance_%": 16.515399876887603,
+      "n": 2230,
+      "MAE_IC95": [
+        5.795735261720615,
+        6.396795736905751
+      ]
+    },
+    "LightGBM (M1)": {
+      "MAE": 6.182076827821747,
+      "RMSE": 8.320608220781844,
+      "R2": 0.5853053737891806,
+      "R2_delta": 0.2912276686181775,
+      "spearman": 0.7624489869406739,
+      "skill_vs_persistance_%": 15.282791580885547,
+      "n": 2230,
+      "MAE_IC95": [
+        5.875396543434259,
+        6.4951345746378255
+      ]
+    },
+    "MLP – dernière visite (M1)": {
+      "MAE": 6.094614708844067,
+      "RMSE": 8.222393425446212,
+      "R2": 0.5950375393732472,
+      "R2_delta": 0.30786132927937493,
+      "spearman": 0.7673326899131675,
+      "skill_vs_persistance_%": 16.48134455403264,
+      "n": 2230,
+      "MAE_IC95": [
+        5.798450975513935,
+        6.399098654831893
+      ]
+    },
+    "Persistance": {
+      "MAE": 7.297309417040359,
+      "RMSE": 9.926162377856283,
+      "R2": 0.4098247247859207,
+      "R2_delta": -0.00869381780881695,
+      "spearman": 0.6981988418648539,
+      "skill_vs_persistance_%": 0.0,
+      "n": 2230,
+      "MAE_IC95": [
+        6.881299019854487,
+        7.743252816052471
+      ]
+    }
+  },
+  "vs_persistence": [
+    {
+      "comparaison": "LightGBM (M1) − Persistance",
+      "diff_MAE": -1.1152325892186117,
+      "IC95_bas": -1.314550747638742,
+      "IC95_haut": -0.9269006063572375
+    },
+    {
+      "comparaison": "MLP – dernière visite (M1) − Persistance",
+      "diff_MAE": -1.2026947081962918,
+      "IC95_bas": -1.4240252770746937,
+      "IC95_haut": -0.994844148381632
+    },
+    {
+      "comparaison": "GRU – trajectoire (M1) − Persistance",
+      "diff_MAE": -1.2051798304779906,
+      "IC95_bas": -1.442331566723391,
+      "IC95_haut": -0.9880667944609512
+    }
+  ],
+  "comparaisons_appariees": {
+    "cv": [
+      {
+        "comparaison": "LightGBM (M1) − MLP – dernière visite (M1)",
+        "diff_MAE": 0.0024,
+        "IC_bas": -0.0474,
+        "IC_haut": 0.0549,
+        "niveau_IC": "98.3 % (Bonferroni, 3 couples)",
+        "distincts": false
+      },
+      {
+        "comparaison": "LightGBM (M1) − GRU – trajectoire (M1)",
+        "diff_MAE": 0.0129,
+        "IC_bas": -0.0456,
+        "IC_haut": 0.0717,
+        "niveau_IC": "98.3 % (Bonferroni, 3 couples)",
+        "distincts": false
+      },
+      {
+        "comparaison": "MLP – dernière visite (M1) − GRU – trajectoire (M1)",
+        "diff_MAE": 0.0105,
+        "IC_bas": -0.0359,
+        "IC_haut": 0.054,
+        "niveau_IC": "98.3 % (Bonferroni, 3 couples)",
+        "distincts": false
+      }
+    ],
+    "test": [
+      {
+        "comparaison": "LightGBM (M1) − MLP – dernière visite (M1)",
+        "diff_MAE": 0.0875,
+        "IC_bas": 0.0094,
+        "IC_haut": 0.1674,
+        "niveau_IC": "98.3 % (Bonferroni, 3 couples)",
+        "distincts": true
+      },
+      {
+        "comparaison": "LightGBM (M1) − GRU – trajectoire (M1)",
+        "diff_MAE": 0.0899,
+        "IC_bas": -0.0007,
+        "IC_haut": 0.1919,
+        "niveau_IC": "98.3 % (Bonferroni, 3 couples)",
+        "distincts": false
+      },
+      {
+        "comparaison": "MLP – dernière visite (M1) − GRU – trajectoire (M1)",
+        "diff_MAE": 0.0025,
+        "IC_bas": -0.0627,
+        "IC_haut": 0.0767,
+        "niveau_IC": "98.3 % (Bonferroni, 3 couples)",
+        "distincts": false
+      }
+    ]
+  },
+  "registry": {
+    "version": "2",
+    "champion": true,
+    "reasons": []
+  },
+  "registry_comparaison": {
+    "Persistance": "3",
+    "LightGBM (M1)": "4",
+    "MLP – dernière visite (M1)": "5"
+  }
+}

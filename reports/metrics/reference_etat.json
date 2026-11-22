@@ -1,0 +1,9 @@
+{
+  "reference": "Persistance ajustée à l'état",
+  "cv_MAE": 6.6722,
+  "cv_MAE_sd": 0.1604,
+  "cv_MAE_persistance": 7.0591,
+  "meilleur_modele": "GRU – trajectoire (M1)",
+  "cv_MAE_meilleur": 6.0546,
+  "part_changement_etat": 0.34549627079747564
+}

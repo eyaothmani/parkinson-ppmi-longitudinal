@@ -1,0 +1,25 @@
+{
+  "fast_mode": false,
+  "cv": {
+    "GRU – trajectoire (M1)": {
+      "MAE": 6.0546,
+      "MAE_sd": 0.1469,
+      "R2_delta": 0.2869
+    },
+    "MLP – dernière visite (M1)": {
+      "MAE": 6.065,
+      "MAE_sd": 0.1526,
+      "R2_delta": 0.2885
+    },
+    "LightGBM (M1)": {
+      "MAE": 6.0669,
+      "MAE_sd": 0.1071,
+      "R2_delta": 0.282
+    },
+    "Persistance": {
+      "MAE": 7.0591,
+      "MAE_sd": 0.1225,
+      "R2_delta": -0.0101
+    }
+  }
+}

@@ -1,0 +1,42 @@
+# Données : suivies par DVC, jamais par Git (DUA PPMI). Seul le jeu synthétique est versionné.
+/data/raw/
+/data/interim/
+/data/processed/
+!/data/synthetic/
+*.tar
+*.zip
+/models/
+/mlruns/
+mlflow.db
+mlflow.db.*
+# Prédictions par visite (PATNO + score) = données patient dérivées : jamais dans Git
+reports/tables/models/*_predictions.csv
+reports/tables/state/*_predictions.csv
+reports/logs/
+reports/validation/
+# Sorties des étapes DVC (régénérées par `dvc repro`) ; seules les métriques reports/metrics/*.json sont dans Git
+reports/tables/
+reports/figures/
+.env
+.venv/
+__pycache__/
+*.egg-info/
+.pytest_cache/
+.coverage
+coverage.xml
+.ipynb_checkpoints/
+archive/
+# Notes personnelles : jamais dans le dépôt
+Claude outputs/
+# Articles du RAG (PDF) : suivis par DVC (rag/corpus.dvc), jamais par Git
+rag/corpus/
+# Index de l'assistant (régénéré par `dvc repro rag_index`)
+rag/index/
+# Article : PDF compilé et fichiers intermédiaires LaTeX (le PDF se partage directement, il se régénère depuis main.tex)
+docs/paper/*.pdf
+docs/paper/*.aux
+docs/paper/*.log
+docs/paper/*.out
+docs/paper/*.toc
+
+mlflow.db-journal

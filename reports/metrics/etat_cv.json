@@ -1,0 +1,56 @@
+{
+  "modele": "Score d'état (modèle mixte) – CV",
+  "cv_MAE": 6.4557,
+  "cv_MAE_sd": 0.1136,
+  "cv_couverture_80": 0.8253585771658061,
+  "comparaisons": [
+    {
+      "comparaison": "Score d'état (modèle mixte) – CV − Persistance",
+      "diff_MAE": -0.6048,
+      "IC_bas": -0.7886,
+      "IC_haut": -0.4351,
+      "niveau_IC": "99.2 % (Bonferroni, 6 couples)",
+      "distincts": true
+    },
+    {
+      "comparaison": "Score d'état (modèle mixte) – CV − Persistance ajustée à l'état",
+      "diff_MAE": -0.2172,
+      "IC_bas": -0.3715,
+      "IC_haut": -0.0626,
+      "niveau_IC": "99.2 % (Bonferroni, 6 couples)",
+      "distincts": true
+    },
+    {
+      "comparaison": "Score d'état (modèle mixte) – CV − GRU – trajectoire (M1)",
+      "diff_MAE": 0.4013,
+      "IC_bas": 0.3051,
+      "IC_haut": 0.501,
+      "niveau_IC": "99.2 % (Bonferroni, 6 couples)",
+      "distincts": true
+    },
+    {
+      "comparaison": "Persistance − Persistance ajustée à l'état",
+      "diff_MAE": 0.3876,
+      "IC_bas": 0.2971,
+      "IC_haut": 0.4729,
+      "niveau_IC": "99.2 % (Bonferroni, 6 couples)",
+      "distincts": true
+    },
+    {
+      "comparaison": "Persistance − GRU – trajectoire (M1)",
+      "diff_MAE": 1.0061,
+      "IC_bas": 0.8548,
+      "IC_haut": 1.158,
+      "niveau_IC": "99.2 % (Bonferroni, 6 couples)",
+      "distincts": true
+    },
+    {
+      "comparaison": "Persistance ajustée à l'état − GRU – trajectoire (M1)",
+      "diff_MAE": 0.6185,
+      "IC_bas": 0.5036,
+      "IC_haut": 0.7351,
+      "niveau_IC": "99.2 % (Bonferroni, 6 couples)",
+      "distincts": true
+    }
+  ]
+}

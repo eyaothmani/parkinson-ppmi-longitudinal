@@ -1,0 +1,46 @@
+{
+  "patients": 1741,
+  "visits": 13206,
+  "tables": [
+    "age",
+    "biospecimen",
+    "datscan",
+    "demographics",
+    "ess",
+    "family",
+    "gds",
+    "genetics",
+    "ledd",
+    "moca",
+    "mri_aseg",
+    "pd_dx_history",
+    "prs",
+    "schwab",
+    "scopa",
+    "socio",
+    "stai",
+    "status",
+    "updrs1",
+    "updrs1p",
+    "updrs2",
+    "updrs3",
+    "updrs4"
+  ],
+  "lineage": {
+    "created_utc": "2026-10-22T10:40:53+00:00",
+    "git_commit": "c681fbf",
+    "dvc_rev": "0b81925562d076927f0765f42c1a2d46.dir",
+    "data_version": "11b646628e45",
+    "config_fingerprint": "00335799dcd1",
+    "versions": {
+      "python": "3.10.20",
+      "numpy": "2.2.6",
+      "pandas": "2.3.3",
+      "scikit-learn": "1.7.2",
+      "statsmodels": "0.15.0",
+      "lightgbm": "4.7.0",
+      "torch": "2.14.1",
+      "mlflow": "3.17.2"
+    }
+  }
+}

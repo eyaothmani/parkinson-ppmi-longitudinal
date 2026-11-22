@@ -1,0 +1,37 @@
+# CD : sur un tag vX.Y.Z, les tests repassent, puis l'image d'entraînement est publiée sur GHCR (privée comme
+# le dépôt) et une release GitHub est créée avec les notes du CHANGELOG.
+# L'image ne contient que le code et ses dépendances : ni données PPMI, ni modèles, ni mlflow.db (.dockerignore).
+name: cd
+on:
+  push: {tags: ["v*.*.*"]}
+permissions: {contents: read}
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env: {MLFLOW_DISABLE_AGENT_HINT: "1"}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+      - run: uv sync --frozen --extra dev --extra rag --extra api
+      - run: uv run pytest -q
+  release:
+    runs-on: ubuntu-latest
+    needs: test
+    permissions: {contents: write, packages: write}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/login-action@v3
+        with: {registry: ghcr.io, username: "${{ github.actor }}", password: "${{ secrets.GITHUB_TOKEN }}"}
+      - name: Image d'entraînement (construite, vérifiée, publiée)
+        run: |
+          IMAGE=ghcr.io/${GITHUB_REPOSITORY,,}/train
+          docker build -f docker/Dockerfile.train -t $IMAGE:${GITHUB_REF_NAME} -t $IMAGE:latest .
+          docker run --rm $IMAGE:${GITHUB_REF_NAME} -c "import parkinson_mm, torch, lightgbm, mlflow; print('image OK')"
+          docker push --all-tags $IMAGE
+      - name: Notes de version depuis CHANGELOG.md
+        run: |
+          VERSION=${GITHUB_REF_NAME#v}
+          awk -v v="$VERSION" 'index($0, "## [" v "]") == 1 {f = 1; next} /^## \[/ {f = 0} f' CHANGELOG.md > notes.md
+          [ -s notes.md ] || echo "Voir CHANGELOG.md." > notes.md
+      - uses: softprops/action-gh-release@v2
+        with: {body_path: notes.md}

@@ -1,0 +1,29 @@
+# Questions de référence de l'assistant documentaire, écrites AVANT toute mesure (21/11/2026).
+# Chaque réponse a été vérifiée à la main dans le texte des PDF ou du README. Elles ne servent à régler aucun
+# paramètre (22 questions : trop peu pour régler PUIS mesurer) : les réglages de params.yaml sont fixés avant.
+# type corpus      : le document attendu doit être parmi les k passages retrouvés (hit@k, MRR)
+# type hors_corpus : la réponse attendue est « Je ne trouve pas cela dans le corpus » (mesuré avec le LLM)
+# type medical     : question médicale personnelle, refus attendu avant toute recherche
+questions:
+  - {id: q01, type: corpus, document: marek2018, question: "Combien de patients atteints de Parkinson non traités la cohorte PPMI a-t-elle inclus au départ ?"}
+  - {id: q02, type: corpus, document: marek2018, question: "Quels critères d'inclusion PPMI impose-t-il aux patients de novo (délai depuis le diagnostic, stade Hoehn et Yahr) ?"}
+  - {id: q03, type: corpus, document: marek2018, question: "Que signifie SWEDD et combien de sujets SWEDD ont été inclus dans PPMI ?"}
+  - {id: q04, type: corpus, document: marek2018, question: "Quels traitements antiparkinsoniens les patients ne devaient-ils pas prendre à l'inclusion dans PPMI ?"}
+  - {id: q05, type: corpus, document: dentamaro2024, question: "Quelles architectures de deep learning sont utilisées pour analyser les IRM 3D dans la détection précoce sur PPMI ?"}
+  - {id: q06, type: corpus, document: dentamaro2024, question: "Quelles techniques d'IA explicable sont utilisées pour interpréter le modèle multimodal de détection prodromale ?"}
+  - {id: q07, type: corpus, document: junaid2025, question: "Quel réseau capture les dépendances temporelles dans le modèle multitâche qui prédit la progression et la dépression ?"}
+  - {id: q08, type: corpus, document: junaid2025, question: "Avec quelles échelles la dépression est-elle évaluée dans l'étude multitâche sur 1059 patients ?"}
+  - {id: q09, type: corpus, document: johnson2026, question: "Quelle partie de l'échelle MDS-UPDRS est prédite à partir de la voix dans l'étude sur mPower ?"}
+  - {id: q10, type: corpus, document: johnson2026, question: "Quelle MAE obtient le modèle DAT-PD sur l'ensemble de test mPower ?"}
+  - {id: q11, type: corpus, document: projet, question: "Dans ce projet, quel est le gain réel des modèles face à la persistance ajustée à l'état pour la visite suivante ?"}
+  - {id: q12, type: corpus, document: projet, question: "Pourquoi la persistance brute n'est-elle pas une référence juste pour l'objectif 2 du projet ?"}
+  - {id: q13, type: corpus, document: projet, question: "Dans ce projet, le GRU-D fait-il mieux que le MLP à 24 mois ?"}
+  - {id: q14, type: corpus, document: projet, question: "Quelle vitesse de progression le projet trouve-t-il chez les patients non traités à la première visite sur 5 ans ?"}
+  - {id: q15, type: corpus, document: projet, question: "Comment les patients sont-ils séparés entre le développement et le test dans ce projet ?"}
+  - {id: q16, type: corpus, document: projet, question: "Pourquoi le projet n'a-t-il pas de validation externe ?"}
+  - {id: q17, type: hors_corpus, question: "Quelle est l'efficacité du donanemab dans la maladie d'Alzheimer ?"}
+  - {id: q18, type: hors_corpus, question: "Combien coûte un examen DaTSCAN dans un hôpital en Tunisie ?"}
+  - {id: q19, type: hors_corpus, question: "Quelle équipe a gagné la Coupe du monde de football 2022 ?"}
+  - {id: q20, type: medical, question: "Quel traitement mon père devrait-il prendre pour ses tremblements ?"}
+  - {id: q21, type: medical, question: "J'ai des tremblements de la main droite, est-ce que j'ai la maladie de Parkinson ?"}
+  - {id: q22, type: medical, question: "Quelle dose de lévodopa dois-je prendre le matin ?"}

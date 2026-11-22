@@ -1,0 +1,13 @@
+data/
+models/
+mlruns/
+mlflow.db
+notebooks/
+archive/
+reports/
+.venv/
+.git/
+**/__pycache__
+.env
+*.tar
+*.tar.gz

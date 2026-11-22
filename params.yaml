@@ -1,0 +1,218 @@
+# =====================================================================================
+#  params.yaml — SEULE source des paramètres de données et des hyperparamètres
+#  Lu par : dvc.yaml (params:), scripts/*.py, notebooks. Toute modification invalide les
+#  stages DVC concernés (`dvc repro` / `dvc exp run -S training.lr=0.0005`).
+# =====================================================================================
+
+project:
+  name: parkinson-multimodal
+  seed: 42
+
+paths:                     # relatifs à la racine du projet
+  raw: data/raw            # surchargé par la variable PPMI_RAW_DIR (ex. data/synthetic en CI)
+  interim: data/interim
+  processed: data/processed
+  reports: reports
+  metrics: reports/metrics
+  models: models
+  mlruns: mlruns
+
+# ---------------------------------------------------------------- population & nettoyage
+cohort:
+  definition: "Parkinson's Disease"
+  enroll_status_keep: [Enrolled, Withdrew, Withdraw Deceased, Complete, Baseline, Baseline Withdraw]
+
+cleaning:
+  max_missing_items_prorate: 3     # D6  : proratisation UPDRS III si <= 3 items manquants (Goetz 2015 : <= 7)
+  jump_threshold_points: 25        # D16 : saut implausible signalé (jamais supprimé)
+  jump_window_months: 12
+  datscan_bl_window_months: 6      # D11 : SBR de référence = scan à +/- 6 mois de BL
+  ledd_max_mg: 4000                # D19 : au-delà -> erreur de saisie -> manquant
+
+# ---------------------------------------------------------------- tâche prédictive
+samples:
+  min_gap_months: 3
+  max_gap_months: 24
+  max_seq_len: 12
+
+split:                             # D9 : split au niveau PATIENT, figé une fois pour toutes
+  test_size: 0.20
+  n_folds: 5
+  seed: 42
+
+# ---------------------------------------------------------------- plan d'analyse statistique (pré-spécifié)
+stats:
+  fdr_alpha: 0.05
+  min_visits: 2
+  # facteur testé -> variable (z = standardisé). 1 LME par facteur, ajusté âge/sexe/durée/état ; correction BH.
+  factors:
+    "Âge à BL (par 10 ans)": age10
+    "Sexe masculin": male
+    "Durée de maladie à BL (par an)": dur_c
+    "Phénotype PIGD": pigd_pheno
+    "Hoehn & Yahr >= 2 à BL": hy2_bl
+    "UPDRS I à BL (z)": z_updrs1_bl
+    "UPDRS II à BL (z)": z_updrs2_bl
+    "MoCA à BL (z)": z_moca_bl
+    "SCOPA-AUT à BL (z)": z_scopa_aut_bl
+    "Epworth à BL (z)": z_ess_bl
+    "GDS-15 à BL (z)": z_gds_bl
+    "STAI à BL (z)": z_stai_bl
+    "Années d'études (z)": z_EDUCYRS
+    "Antécédent familial PD": ANYFAMPD
+    "Aβ42 LCR (z)": z_csf_abeta42
+    "Aβ42/40 LCR (z)": z_csf_ab42_40
+    "pTau181 LCR (z)": z_csf_ptau181
+    "α-synucléine LCR (z)": z_csf_asyn
+    "NfL plasma (z)": z_plasma_nfl
+    "GFAP plasma (z)": z_plasma_gfap
+    "SBR putamen BL (z)": z_sbr_putamen_bl
+    "SBR caudé BL (z)": z_sbr_caudate_bl
+    "Asymétrie putamen BL (z)": z_sbr_put_asym_bl
+    "IRM putamen (z)": z_mri_putamen
+    "IRM hippocampe (z)": z_mri_hippocampus
+    "IRM ventricules lat. (z)": z_mri_lat_ventricles
+    "IRM cortex (z)": z_mri_cortex
+    "Porteur LRRK2": lrrk2
+    "Porteur GBA": gba
+    "APOE ε4": apoe4
+    "Score polygénique (z)": z_prs
+  # chaîne multimodale emboîtée (même sous-population) — M1 -> M4
+  modality_chain:
+    M1_clinique: [age_c, male, dur_c, pigd_pheno, z_updrs2_bl, z_moca_bl, z_scopa_aut_bl]
+    M2_biologie: [z_csf_ab42_40, z_csf_ptau181, z_plasma_nfl]
+    M3_imagerie: [z_sbr_caudate_bl, z_sbr_putamen_bl]
+    M4_genetique: [lrrk2, gba, z_prs]
+
+# ---------------------------------------------------------------- Deep Learning
+training:
+  epochs: 80
+  patience: 12
+  batch_size: 256
+  lr: 0.001
+  weight_decay: 0.0001
+  d: 64
+  dropout: 0.2
+  final_seeds: 3          # ensemble de graines pour l'évaluation finale
+
+fast_mode:                # itération rapide / CI (scripts/train.py --fast)
+  epochs: 6
+  patience: 3
+  folds: [0, 1]
+
+# ---------------------------------------------------------------- expériences (validation croisée)
+# Objectif 2 : QUATRE modèles comparés sur les mêmes variables cliniques (M1) — ADR-0015.
+# `question` = experiment MLflow ; un run par modèle, un run imbriqué par pli.
+# Les 9 autres expériences de la v1.0.0 (tendance, Ridge, Transformer, ablations, fusions) restent au tag v1.0.0.
+experiments:
+  - {name: "Persistance", question: objectif2_score_futur, family: baseline, algo: persistence}
+  - {name: "LightGBM (M1)", question: objectif2_score_futur, family: ml, algo: lgbm}
+  - {name: "MLP – dernière visite (M1)", question: objectif2_score_futur, family: dl, algo: mlp}
+  - {name: "GRU – trajectoire (M1)", question: objectif2_score_futur, family: dl, algo: gru}
+
+evaluation:
+  # réévalués sur le TEST : persistance + modèles imposés + meilleur ML + meilleur DL de la CV (sélection automatique)
+  always_include: ["Persistance", "LightGBM (M1)", "MLP – dernière visite (M1)", "GRU – trajectoire (M1)"]
+  bootstrap_samples: 2000
+  interval_coverage: 0.80  # intervalle de prédiction empirique (quantiles des résidus CV)
+
+explain:
+  n_repeats: 5             # permutation par groupe de variables / modalité
+
+tracking:
+  uri: sqlite:///mlflow.db # backend local léger (ADR-0003) ; artefacts dans mlruns/
+  experiment_prefix: parkinson-mm
+  registered_model: parkinson-next-visit-updrs3
+
+promotion:                 # critères OBJECTIFS pour l'alias « champion » (ADR-0004)
+  # 1) IC95 bootstrap patient de (MAE modèle − MAE persistance) SUR LE TEST entièrement < 0
+  #    (seule règle qui lit le test ; elle ne choisit pas entre modèles, le choix se fait en CV)
+  # 2) instabilité CV : MAE_sd <= max_cv_mae_sd
+  # 3) si un champion existe : MAE de CV <= MAE de CV du champion (sinon reste « candidate »)
+  max_cv_mae_sd: 0.30
+
+# ---------------------------------------------------------------- sprint 5 : deep learning central (ADR-0018)
+# Une visite d'origine -> MDS-UPDRS III à 12, 24 et 36 mois (mesure la plus proche, à ± tolerance_months).
+# Les réseaux partent de `training` (réglages de l'objectif 2) ; `tuning` donne le MÊME budget de réglage à chaque famille.
+horizons:
+  months: [12, 24, 36]
+  tolerance_months: 3
+  primary: 24                    # horizon de l'hypothèse principale H1
+  quantiles: [0.1, 0.5, 0.9]     # intervalle 10-90 % du GRU-D (H4)
+  coverage_range: [0.75, 0.85]
+  auxiliary: [updrs2, moca]      # cibles auxiliaires du multitâche
+  auxiliary_weight: 0.3
+  mcid_points: 3.25              # différence cliniquement importante du MDS-UPDRS III
+  final_seeds: 5                 # graines de l'évaluation finale (test)
+  question: objectif2_multi_horizon
+  tuning:                        # recherche aléatoire, même budget pour LightGBM, MLP et GRU-D (essai 0 = réglages actuels)
+    trials: 20
+    folds: [0, 1]                # plis de réglage ; la validation croisée à 5 plis suit avec les meilleurs réglages
+    spaces:
+      lgbm:
+        learning_rate: {low: 0.01, high: 0.1, log: true}
+        num_leaves: [7, 15, 31, 63]
+        min_child_samples: [20, 40, 80]
+        colsample_bytree: {low: 0.5, high: 1.0}
+      mlp: &reseaux              # MLP et GRU-D : même espace, donc mêmes 20 essais tirés
+        lr: {low: 0.0001, high: 0.003, log: true}
+        d: [32, 64, 128]
+        dropout: {low: 0.0, high: 0.4}
+        weight_decay: {low: 0.00001, high: 0.001, log: true}
+      grud: *reseaux
+  registered_model: parkinson-multi-horizon-updrs3
+  experiments:
+    - {name: "Persistance", family: baseline, algo: persistence}
+    - {name: "LightGBM (un par horizon)", family: ml, algo: lgbm}
+    - {name: "MLP – dernière visite, multi-sortie", family: dl, algo: mlp}
+    - {name: "GRU-D multi-horizon", family: dl, algo: grud}
+  ablations:                     # validation croisée seulement : ce qui fait marcher le GRU-D
+    - {name: "GRU-D sans masques", family: dl, algo: grud, options: {masks: false}}
+    - {name: "GRU-D sans temps écoulé", family: dl, algo: grud, options: {decay: false}}
+    - {name: "GRU-D sans multitâche", family: dl, algo: grud, options: {auxiliary_weight: 0.0}}
+
+# ---------------------------------------------------------------- sprint 6 : robustesse (notebook 03)
+robustesse:                    # sprint 6 : où le modèle se trompe, et son intervalle à 80 % est-il fiable ? (CV seulement)
+  question: objectif2_robustesse
+  modele: "GRU – trajectoire (M1)"     # modèle retenu pour l'objectif 2
+  reference: Persistance               # « le score ne change pas »
+  niveau: 0.80                         # intervalle à 80 %
+
+# ---------------------------------------------------------------- référence juste de l'objectif 2 (CV seulement)
+reference_etat:                # les modèles connaissent l'état (ON/OFF) de l'examen à prédire, la persistance brute non
+  question: objectif2_score_futur      # même experiment MLflow que les 4 modèles : runs comparables entre eux
+  persistance: Persistance             # prédictions hors-pli de départ
+  statistique: median                  # variation médiane par transition d'état, apprise sur les autres plis
+
+# ---------------------------------------------------------------- phase 3 : sensibilité de l'objectif 2 (CV seulement)
+sensibilite:                   # mêmes modèles, plis et graines ; variables neutralisées (mises à manquant pour tous)
+  question: objectif2_score_futur
+  variantes:
+    "sans état cible":         # prédiction NON conditionnelle : l'état (non traité / OFF / ON) de l'examen à prédire est caché
+      retirer: [target_off, target_on, target_untreated]
+      modeles: ["LightGBM (M1)", "MLP – dernière visite (M1)", "GRU – trajectoire (M1)"]
+      face_persistance: true   # comparée aussi à la persistance brute, qui ne connaît pas non plus cet état
+    "une seule visite":        # RQ1 : ni score précédent, ni pente, ni moyenne, ni nombre ou écart des visites passées
+      retirer: [np3_prev, np3_slope_hist, np3_mean_hist, n_prior, dt_prev]
+      modeles: ["LightGBM (M1)", "MLP – dernière visite (M1)"]
+
+# ---------------------------------------------------------------- extension : assistant documentaire (RAG)
+rag:                           # séparé du pipeline PPMI : il ne lit que les sources de rag/manifest.yaml
+  question: extension_rag              # experiment MLflow
+  manifest: rag/manifest.yaml          # articles publiés (rag/corpus/, DVC) + README du projet
+  questions: rag/eval/questions.yaml   # écrites AVANT la mesure ; réglages ci-dessous fixés avant, non ajustés après
+  index_dir: rag/index
+  embedding_model: intfloat/multilingual-e5-small   # local, multilingue (questions FR, articles EN), licence MIT
+  threads: 2                           # PC portable : calcul doux
+  batch_size: 8
+  chunk_size: 1000                     # caractères (≈ 250 tokens, sous la limite de 512 tokens du modèle)
+  chunk_overlap: 150
+  k: 5                                 # passages donnés au LLM
+  pause_s: 15                          # entre deux appels : limite de tokens par minute de l'offre gratuite
+  llm:                                 # API compatible OpenAI ; sans clé : mode extractif (passages cités)
+    base_url: https://api.groq.com/openai/v1
+    key_env: GROQ_API_KEY              # nom de la variable (ou ligne du fichier .env) qui contient la clé
+    model: openai/gpt-oss-120b         # remplaçant recommandé par Groq de llama-3.3-70b (arrêté le 16/08/2026)
+    reasoning_effort: medium           # v2 (low en v1) : lire tous les extraits ; null si le modèle ne le prend pas en charge
+    temperature: 0
+    max_tokens: 1500                   # réflexion + réponse

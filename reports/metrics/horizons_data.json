@@ -1,0 +1,20 @@
+{
+  "visites_origine": 10013,
+  "par_horizon": {
+    "12_mois": {
+      "paires": 9160,
+      "patients": 1376,
+      "patients_test": 284
+    },
+    "24_mois": {
+      "paires": 6866,
+      "patients": 1256,
+      "patients_test": 258
+    },
+    "36_mois": {
+      "paires": 5217,
+      "patients": 1015,
+      "patients_test": 205
+    }
+  }
+}

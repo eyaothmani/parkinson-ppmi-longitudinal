@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Parkinson, trajectoires PPMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<link rel="stylesheet" href="app.css">
+<link rel="icon" href="logo.svg" type="image/svg+xml">
+</head>
+<body>
+<div class="shell">
+  <aside class="rail">
+    <a class="brand" href="#accueil" aria-label="Accueil">
+      <img src="logo.svg" alt="" width="44" height="44">
+      <span><b>Parkinson</b><small>Trajectoires PPMI</small></span>
+    </a>
+    <nav class="nav" aria-label="Pages">
+      <a href="#accueil" data-page="accueil">Vue d'ensemble</a>
+      <a href="#actuel" data-page="actuel"><small>Objectif 1</small>Où en est-il&nbsp;?</a>
+      <a href="#futur" data-page="futur"><small>Objectif 2</small>Où sera-t-il&nbsp;?</a>
+      <a href="#facteurs" data-page="facteurs"><small>Objectif 3</small>Qu'est-ce qui accélère&nbsp;?</a>
+      <a href="#assistant" data-page="assistant">Assistant documentaire</a>
+    </nav>
+    <section class="services" aria-live="polite">
+      <h2>Services de l'API</h2>
+      <ul id="services"><li>Connexion à l'API…</li></ul>
+    </section>
+    <form class="keyform" id="keyform" hidden>
+      <label for="apikey">Cette API demande une clé</label>
+      <input id="apikey" type="password" autocomplete="off" placeholder="Clé d'API">
+      <button type="submit">Utiliser cette clé</button>
+    </form>
+    <footer class="rail-foot">
+      <p>Outil de recherche sur la cohorte PPMI. Il ne pose aucun diagnostic et ne recommande aucun traitement.</p>
+      <p><a href="/docs">Documentation de l'API</a></p>
+      <button type="button" class="theme" id="theme">Thème sombre</button>
+    </footer>
+  </aside>
+  <main class="main" id="main" tabindex="-1">
+    <section class="page" id="page-accueil" data-page="accueil"></section>
+    <section class="page" id="page-actuel" data-page="actuel" hidden></section>
+    <section class="page" id="page-futur" data-page="futur" hidden></section>
+    <section class="page" id="page-facteurs" data-page="facteurs" hidden></section>
+    <section class="page" id="page-assistant" data-page="assistant" hidden></section>
+  </main>
+</div>
+<div class="tip" id="tip" role="status" hidden></div>
+<script type="module" src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,80 @@
+{
+  "reference": "Persistance ajustée à l'état",
+  "cv_MAE_12m": 7.0991,
+  "cv_MAE_24m": 8.4135,
+  "cv_MAE_36m": 9.1739,
+  "comparaisons": [
+    {
+      "horizon": 12,
+      "comparaison": "LightGBM (un par horizon) − Persistance ajustée à l'état",
+      "diff_MAE": -0.4797,
+      "IC95_bas": -0.5822,
+      "IC95_haut": -0.3731,
+      "niveau_IC": "99.4 % (Bonferroni)"
+    },
+    {
+      "horizon": 12,
+      "comparaison": "MLP – dernière visite, multi-sortie − Persistance ajustée à l'état",
+      "diff_MAE": -0.5302,
+      "IC95_bas": -0.6557,
+      "IC95_haut": -0.4183,
+      "niveau_IC": "99.4 % (Bonferroni)"
+    },
+    {
+      "horizon": 12,
+      "comparaison": "GRU-D multi-horizon − Persistance ajustée à l'état",
+      "diff_MAE": -0.5504,
+      "IC95_bas": -0.672,
+      "IC95_haut": -0.4334,
+      "niveau_IC": "99.4 % (Bonferroni)"
+    },
+    {
+      "horizon": 24,
+      "comparaison": "LightGBM (un par horizon) − Persistance ajustée à l'état",
+      "diff_MAE": -0.6332,
+      "IC95_bas": -0.794,
+      "IC95_haut": -0.4821,
+      "niveau_IC": "99.4 % (Bonferroni)"
+    },
+    {
+      "horizon": 24,
+      "comparaison": "MLP – dernière visite, multi-sortie − Persistance ajustée à l'état",
+      "diff_MAE": -0.7893,
+      "IC95_bas": -0.9796,
+      "IC95_haut": -0.6172,
+      "niveau_IC": "99.4 % (Bonferroni)"
+    },
+    {
+      "horizon": 24,
+      "comparaison": "GRU-D multi-horizon − Persistance ajustée à l'état",
+      "diff_MAE": -0.7644,
+      "IC95_bas": -0.9596,
+      "IC95_haut": -0.573,
+      "niveau_IC": "99.4 % (Bonferroni)"
+    },
+    {
+      "horizon": 36,
+      "comparaison": "LightGBM (un par horizon) − Persistance ajustée à l'état",
+      "diff_MAE": -0.6574,
+      "IC95_bas": -0.8545,
+      "IC95_haut": -0.4586,
+      "niveau_IC": "99.4 % (Bonferroni)"
+    },
+    {
+      "horizon": 36,
+      "comparaison": "MLP – dernière visite, multi-sortie − Persistance ajustée à l'état",
+      "diff_MAE": -0.7461,
+      "IC95_bas": -0.961,
+      "IC95_haut": -0.5043,
+      "niveau_IC": "99.4 % (Bonferroni)"
+    },
+    {
+      "horizon": 36,
+      "comparaison": "GRU-D multi-horizon − Persistance ajustée à l'état",
+      "diff_MAE": -0.6868,
+      "IC95_bas": -0.9125,
+      "IC95_haut": -0.4328,
+      "niveau_IC": "99.4 % (Bonferroni)"
+    }
+  ]
+}

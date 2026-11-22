@@ -1,0 +1,31 @@
+# Corpus de l'assistant documentaire : la SEULE liste des sources qu'il peut lire.
+# Sources permises : articles publiés en accès libre (rag/corpus/, suivis par DVC, jamais par Git) et la
+# documentation du projet (résultats agrégés, sans aucune donnée patient). Le code refuse data/, reports/tables/,
+# models/, mlruns/ et mlflow.db.
+# Ajouter un article : déposer le PDF dans rag/corpus/, ajouter une entrée ici, puis `dvc add rag/corpus`.
+documents:
+  - id: marek2018
+    fichier: rag/corpus/2018_marek_ppmi_cohorte_biomarqueurs.pdf
+    citation: "Marek et al. 2018, Ann Clin Transl Neurol"
+    doi: 10.1002/acn3.644
+    licence: CC BY-NC-ND 4.0
+  - id: dentamaro2024
+    fichier: rag/corpus/2024_dentamaro_multimodal_xai_ppmi.pdf
+    citation: "Dentamaro et al. 2024, Sci Rep"
+    doi: 10.1038/s41598-024-70165-4
+    licence: accès libre
+  - id: junaid2025
+    fichier: rag/corpus/2025_junaid_multitache_progression_depression.pdf
+    citation: "Junaid et al. 2025, IEEE Access"
+    doi: 10.1109/ACCESS.2025.3593254
+    licence: CC BY 4.0
+  - id: johnson2026
+    fichier: rag/corpus/2026_johnson_voix_mpower_trajectoires.pdf
+    citation: "Johnson & Logeswari 2026, Front Digit Health"
+    doi: 10.3389/fdgth.2026.1864460
+    licence: CC BY 4.0
+  - id: projet
+    fichier: README.md
+    citation: "README du projet"
+    doi: ""
+    licence: MIT

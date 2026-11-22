@@ -1,0 +1,191 @@
+PATNO,COHORT_DEFINITION,ENROLL_STATUS,ENROLL_AGE
+3000,Parkinson's Disease,Enrolled,74.5
+3001,Parkinson's Disease,Enrolled,65.2
+3002,Parkinson's Disease,Enrolled,57.7
+3003,Parkinson's Disease,Enrolled,44.5
+3004,Parkinson's Disease,Withdrew,50.2
+3005,Parkinson's Disease,Withdrew,71.8
+3006,Parkinson's Disease,Enrolled,61.5
+3007,Parkinson's Disease,Enrolled,59.5
+3008,Parkinson's Disease,Enrolled,76.8
+3009,Parkinson's Disease,Screen failed,50.5
+3010,Parkinson's Disease,Withdrew,56.7
+3011,Parkinson's Disease,Enrolled,57.7
+3012,Parkinson's Disease,Withdrew,67.3
+3013,Parkinson's Disease,Enrolled,56.0
+3014,Parkinson's Disease,Enrolled,56.5
+3015,Parkinson's Disease,Enrolled,47.6
+3016,Parkinson's Disease,Withdrew,68.6
+3017,Parkinson's Disease,Enrolled,69.3
+3018,Parkinson's Disease,Enrolled,57.7
+3019,Parkinson's Disease,Enrolled,63.5
+3020,Parkinson's Disease,Enrolled,50.4
+3021,Parkinson's Disease,Enrolled,57.8
+3022,Parkinson's Disease,Enrolled,74.4
+3023,Parkinson's Disease,Enrolled,63.2
+3024,Parkinson's Disease,Enrolled,82.8
+3025,Parkinson's Disease,Enrolled,54.9
+3026,Parkinson's Disease,Screen failed,67.2
+3027,Parkinson's Disease,Screen failed,60.2
+3028,Parkinson's Disease,Enrolled,67.1
+3029,Parkinson's Disease,Enrolled,61.9
+3030,Parkinson's Disease,Enrolled,56.9
+3031,Parkinson's Disease,Enrolled,54.2
+3032,Parkinson's Disease,Enrolled,85.0
+3033,Parkinson's Disease,Enrolled,61.3
+3034,Parkinson's Disease,Enrolled,43.9
+3035,Parkinson's Disease,Enrolled,56.2
+3036,Parkinson's Disease,Enrolled,68.1
+3037,Parkinson's Disease,Withdrew,57.5
+3038,Parkinson's Disease,Screen failed,74.2
+3039,Parkinson's Disease,Enrolled,71.0
+3040,Parkinson's Disease,Enrolled,60.6
+3041,Parkinson's Disease,Enrolled,57.8
+3042,Parkinson's Disease,Enrolled,53.0
+3043,Parkinson's Disease,Enrolled,55.7
+3044,Parkinson's Disease,Enrolled,48.7
+3045,Parkinson's Disease,Withdrew,72.8
+3046,Parkinson's Disease,Enrolled,76.3
+3047,Parkinson's Disease,Enrolled,50.7
+3048,Parkinson's Disease,Enrolled,51.4
+3049,Parkinson's Disease,Withdrew,46.1
+3050,Parkinson's Disease,Enrolled,53.3
+3051,Parkinson's Disease,Enrolled,35.0
+3052,Parkinson's Disease,Withdrew,51.7
+3053,Parkinson's Disease,Enrolled,73.7
+3054,Parkinson's Disease,Enrolled,58.9
+3055,Parkinson's Disease,Enrolled,69.7
+3056,Parkinson's Disease,Enrolled,57.6
+3057,Parkinson's Disease,Enrolled,77.8
+3058,Parkinson's Disease,Enrolled,63.8
+3059,Parkinson's Disease,Enrolled,58.6
+3060,Parkinson's Disease,Enrolled,85.0
+3061,Parkinson's Disease,Enrolled,59.1
+3062,Parkinson's Disease,Enrolled,51.0
+3063,Parkinson's Disease,Enrolled,63.8
+3064,Parkinson's Disease,Enrolled,61.7
+3065,Parkinson's Disease,Enrolled,71.6
+3066,Parkinson's Disease,Enrolled,53.7
+3067,Parkinson's Disease,Screen failed,69.2
+3068,Parkinson's Disease,Enrolled,69.7
+3069,Parkinson's Disease,Enrolled,56.0
+3070,Parkinson's Disease,Enrolled,63.5
+3071,Parkinson's Disease,Screen failed,54.5
+3072,Parkinson's Disease,Enrolled,83.1
+3073,Parkinson's Disease,Screen failed,55.7
+3074,Parkinson's Disease,Enrolled,57.9
+3075,Parkinson's Disease,Enrolled,52.4
+3076,Parkinson's Disease,Enrolled,58.9
+3077,Parkinson's Disease,Screen failed,61.9
+3078,Parkinson's Disease,Screen failed,68.9
+3079,Parkinson's Disease,Enrolled,56.5
+3080,Parkinson's Disease,Enrolled,60.3
+3081,Parkinson's Disease,Enrolled,49.3
+3082,Parkinson's Disease,Enrolled,54.6
+3083,Parkinson's Disease,Enrolled,85.0
+3084,Parkinson's Disease,Enrolled,71.4
+3085,Parkinson's Disease,Enrolled,55.0
+3086,Parkinson's Disease,Enrolled,50.0
+3087,Parkinson's Disease,Screen failed,53.2
+3088,Parkinson's Disease,Enrolled,61.8
+3089,Parkinson's Disease,Enrolled,62.3
+3090,Parkinson's Disease,Screen failed,55.3
+3091,Parkinson's Disease,Screen failed,50.4
+3092,Parkinson's Disease,Enrolled,74.8
+3093,Parkinson's Disease,Withdrew,66.1
+3094,Parkinson's Disease,Screen failed,58.6
+3095,Parkinson's Disease,Screen failed,60.0
+3096,Parkinson's Disease,Enrolled,57.2
+3097,Parkinson's Disease,Screen failed,35.6
+3098,Parkinson's Disease,Withdrew,63.0
+3099,Parkinson's Disease,Withdrew,52.4
+3100,Parkinson's Disease,Enrolled,53.0
+3101,Parkinson's Disease,Enrolled,56.2
+3102,Parkinson's Disease,Withdrew,68.6
+3103,Parkinson's Disease,Screen failed,51.5
+3104,Parkinson's Disease,Enrolled,49.1
+3105,Parkinson's Disease,Enrolled,67.8
+3106,Parkinson's Disease,Enrolled,68.8
+3107,Parkinson's Disease,Screen failed,53.4
+3108,Parkinson's Disease,Enrolled,67.1
+3109,Parkinson's Disease,Enrolled,59.4
+3110,Parkinson's Disease,Enrolled,64.7
+3111,Parkinson's Disease,Enrolled,50.7
+3112,Parkinson's Disease,Enrolled,69.5
+3113,Parkinson's Disease,Enrolled,72.8
+3114,Parkinson's Disease,Enrolled,67.7
+3115,Parkinson's Disease,Enrolled,67.0
+3116,Parkinson's Disease,Screen failed,35.0
+3117,Parkinson's Disease,Enrolled,64.3
+3118,Parkinson's Disease,Withdrew,61.8
+3119,Parkinson's Disease,Enrolled,60.7
+3120,Parkinson's Disease,Enrolled,56.3
+3121,Parkinson's Disease,Enrolled,62.5
+3122,Parkinson's Disease,Screen failed,65.7
+3123,Parkinson's Disease,Enrolled,59.6
+3124,Parkinson's Disease,Enrolled,57.8
+3125,Parkinson's Disease,Enrolled,73.1
+3126,Parkinson's Disease,Withdrew,52.1
+3127,Parkinson's Disease,Enrolled,71.3
+3128,Parkinson's Disease,Enrolled,63.6
+3129,Parkinson's Disease,Enrolled,54.8
+3130,Parkinson's Disease,Enrolled,59.4
+3131,Parkinson's Disease,Enrolled,53.7
+3132,Parkinson's Disease,Withdrew,68.1
+3133,Parkinson's Disease,Enrolled,65.1
+3134,Parkinson's Disease,Enrolled,57.0
+3135,Parkinson's Disease,Enrolled,52.1
+3136,Parkinson's Disease,Withdrew,64.7
+3137,Parkinson's Disease,Enrolled,70.6
+3138,Parkinson's Disease,Screen failed,61.0
+3139,Parkinson's Disease,Enrolled,65.8
+3140,Parkinson's Disease,Enrolled,58.6
+3141,Parkinson's Disease,Enrolled,62.6
+3142,Parkinson's Disease,Withdrew,59.4
+3143,Parkinson's Disease,Enrolled,64.6
+3144,Parkinson's Disease,Enrolled,48.4
+3145,Parkinson's Disease,Withdrew,67.8
+3146,Parkinson's Disease,Enrolled,59.9
+3147,Parkinson's Disease,Withdrew,65.2
+3148,Parkinson's Disease,Enrolled,58.9
+3149,Parkinson's Disease,Withdrew,64.9
+3150,Parkinson's Disease,Enrolled,52.3
+3151,Parkinson's Disease,Enrolled,72.7
+3152,Parkinson's Disease,Enrolled,46.7
+3153,Parkinson's Disease,Enrolled,52.6
+3154,Parkinson's Disease,Enrolled,64.1
+3155,Parkinson's Disease,Enrolled,75.2
+3156,Parkinson's Disease,Screen failed,64.5
+3157,Parkinson's Disease,Enrolled,59.8
+3158,Parkinson's Disease,Withdrew,49.2
+3159,Parkinson's Disease,Enrolled,60.3
+3160,Healthy Control,Enrolled,61.8
+3161,Healthy Control,Enrolled,77.2
+3162,Healthy Control,Enrolled,67.6
+3163,Healthy Control,Screen failed,48.2
+3164,Healthy Control,Enrolled,80.2
+3165,Healthy Control,Enrolled,58.4
+3166,Healthy Control,Enrolled,54.1
+3167,Healthy Control,Withdrew,75.3
+3168,Healthy Control,Withdrew,61.6
+3169,Healthy Control,Enrolled,58.7
+3170,Healthy Control,Enrolled,64.0
+3171,Healthy Control,Screen failed,69.6
+3172,Healthy Control,Enrolled,70.9
+3173,Healthy Control,Enrolled,49.6
+3174,Healthy Control,Withdrew,80.0
+3175,Healthy Control,Withdrew,70.5
+3176,Healthy Control,Enrolled,58.6
+3177,Healthy Control,Screen failed,54.6
+3178,Healthy Control,Screen failed,53.3
+3179,Healthy Control,Enrolled,63.1
+3180,Healthy Control,Withdrew,56.2
+3181,Healthy Control,Enrolled,55.1
+3182,Healthy Control,Enrolled,69.3
+3183,Healthy Control,Enrolled,65.3
+3184,Healthy Control,Enrolled,58.4
+3185,Healthy Control,Enrolled,68.6
+3186,Healthy Control,Enrolled,74.3
+3187,Healthy Control,Withdrew,52.1
+3188,Healthy Control,Enrolled,56.6
+3189,Healthy Control,Enrolled,70.5

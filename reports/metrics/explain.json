@@ -1,0 +1,55 @@
+{
+  "model": "GRU – trajectoire (M1)",
+  "importance": [
+    {
+      "groupe": "Traitement / état de mesure",
+      "hausse_MAE": 0.7349,
+      "ecart_type": 0.0706
+    },
+    {
+      "groupe": "UPDRS III (historique)",
+      "hausse_MAE": 0.3526,
+      "ecart_type": 0.0369
+    },
+    {
+      "groupe": "Autres échelles cliniques",
+      "hausse_MAE": 0.3014,
+      "ecart_type": 0.0426
+    },
+    {
+      "groupe": "Temps",
+      "hausse_MAE": 0.1414,
+      "ecart_type": 0.0255
+    },
+    {
+      "groupe": "Démographie",
+      "hausse_MAE": 0.0066,
+      "ecart_type": 0.0111
+    },
+    {
+      "groupe": "Biologie",
+      "hausse_MAE": 0.0,
+      "ecart_type": 0.0
+    },
+    {
+      "groupe": "IRM",
+      "hausse_MAE": 0.0,
+      "ecart_type": 0.0
+    },
+    {
+      "groupe": "DaTSCAN",
+      "hausse_MAE": 0.0,
+      "ecart_type": 0.0
+    },
+    {
+      "groupe": "Génétique",
+      "hausse_MAE": 0.0,
+      "ecart_type": 0.0
+    },
+    {
+      "groupe": "Non moteur",
+      "hausse_MAE": -0.0119,
+      "ecart_type": 0.0084
+    }
+  ]
+}

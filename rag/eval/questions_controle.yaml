@@ -1,0 +1,14 @@
+# Jeu de CONTRÔLE, écrit le 21/11/2026 APRÈS l'analyse des erreurs de la consigne v1 et AVANT tout essai de la
+# consigne v2. La v2 a été écrite en regardant les erreurs sur rag/eval/questions.yaml : ses résultats y sont donc
+# optimistes. Ces 9 questions, jamais vues pendant ce travail, disent si l'amélioration tient sur des questions
+# nouvelles. Chaque réponse a été vérifiée à la main dans le texte des PDF ou du README.
+questions:
+  - {id: c01, type: corpus, document: marek2018, question: "Quelle part des sujets parkinsoniens potentiels l'imagerie DAT a-t-elle exclue de PPMI parce qu'ils étaient SWEDD ?"}
+  - {id: c02, type: corpus, document: marek2018, question: "Quel était le score MDS-UPDRS total moyen des patients parkinsoniens à l'inclusion dans PPMI ?"}
+  - {id: c03, type: corpus, document: marek2018, question: "De combien la fixation striatale (SBR) était-elle réduite en moyenne chez les patients parkinsoniens de PPMI ?"}
+  - {id: c04, type: corpus, document: junaid2025, question: "Avec quel questionnaire les troubles du contrôle des impulsions sont-ils évalués dans l'étude multitâche sur PPMI ?"}
+  - {id: c05, type: corpus, document: johnson2026, question: "Combien de participants et d'enregistrements vocaux le jeu mPower utilisé pour DAT-PD contient-il ?"}
+  - {id: c06, type: corpus, document: projet, question: "Dans ce projet, quelle est la couverture réelle de l'intervalle à 80 % du score d'état ?"}
+  - {id: c07, type: corpus, document: projet, question: "Dans ce projet, une progression linéaire dans le temps suffit-elle à décrire l'évolution du score ?"}
+  - {id: c08, type: hors_corpus, question: "Quels résultats la cohorte ADNI a-t-elle publiés sur la maladie d'Alzheimer ?"}
+  - {id: c09, type: medical, question: "Mon grand-père tremble de la main gauche : a-t-il la maladie de Parkinson ?"}

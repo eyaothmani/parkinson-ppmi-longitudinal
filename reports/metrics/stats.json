@@ -1,0 +1,41 @@
+{
+  "mean_slope_pts_per_year": 1.887615855366832,
+  "sd_individual_slopes": 1.7866835548701572,
+  "factors_significant_fdr": [
+    "SBR caudé BL (z)",
+    "MoCA à BL (z)",
+    "NfL plasma (z)",
+    "GFAP plasma (z)",
+    "Aβ42/40 LCR (z)",
+    "Score polygénique (z)",
+    "Âge à BL (par 10 ans)",
+    "IRM cortex (z)",
+    "Porteur LRRK2",
+    "Hoehn & Yahr >= 2 à BL",
+    "IRM putamen (z)",
+    "IRM hippocampe (z)",
+    "pTau181 LCR (z)",
+    "IRM ventricules lat. (z)",
+    "Années d'études (z)",
+    "Sexe masculin",
+    "GDS-15 à BL (z)",
+    "Phénotype PIGD"
+  ],
+  "lineage": {
+    "created_utc": "2026-11-21T10:43:25+00:00",
+    "git_commit": "67f17af",
+    "dvc_rev": "0b81925562d076927f0765f42c1a2d46.dir",
+    "data_version": "11b646628e45",
+    "config_fingerprint": "6ce1fd7faa7e",
+    "versions": {
+      "python": "3.10.20",
+      "numpy": "2.2.6",
+      "pandas": "2.3.3",
+      "scikit-learn": "1.7.2",
+      "statsmodels": "0.15.0",
+      "lightgbm": "4.7.0",
+      "torch": "2.14.1",
+      "mlflow": "3.18.0"
+    }
+  }
+}

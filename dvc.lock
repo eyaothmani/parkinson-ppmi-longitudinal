@@ -1,0 +1,1135 @@
+schema: '2.0'
+stages:
+  ingest:
+    cmd: python scripts/prepare_data.py --stage ingest
+    deps:
+    - path: data/raw
+      hash: md5
+      md5: 0b81925562d076927f0765f42c1a2d46.dir
+      size: 250821943
+      nfiles: 23
+    - path: src/parkinson_mm/data
+      hash: md5
+      md5: 170dbc9170c55516517cde3899c442b1.dir
+      size: 47824
+      nfiles: 29
+    params:
+      params.yaml:
+        cleaning:
+          max_missing_items_prorate: 3
+          jump_threshold_points: 25
+          jump_window_months: 12
+          datscan_bl_window_months: 6
+          ledd_max_mg: 4000
+        cohort:
+          definition: Parkinson's Disease
+          enroll_status_keep:
+          - Enrolled
+          - Withdrew
+          - Withdraw Deceased
+          - Complete
+          - Baseline
+          - Baseline Withdraw
+    outs:
+    - path: data/interim/pd_longitudinal.csv
+      hash: md5
+      md5: afdfde8bf16ad0d9df94e599dfb03c40
+      size: 3378052
+    - path: data/interim/pd_patients.csv
+      hash: md5
+      md5: 81f9b4e9f79e341be3a8975462ba497c
+      size: 507096
+    - path: reports/metrics/ingest.json
+      hash: md5
+      md5: 446ae7d3cea841a863a2fa685adb0883
+      size: 854
+  validate:
+    cmd: python scripts/prepare_data.py --stage validate
+    deps:
+    - path: data/interim
+      hash: md5
+      md5: 9eaed224c5b9dbf50433af5c27edfa5c.dir
+      size: 3885148
+      nfiles: 2
+    - path: src/parkinson_mm/data/validation
+      hash: md5
+      md5: 5515e3b410a5069a836ad618db40fcc8.dir
+      size: 6887
+      nfiles: 6
+    outs:
+    - path: data/processed/pd_longitudinal.csv
+      hash: md5
+      md5: afdfde8bf16ad0d9df94e599dfb03c40
+      size: 3378052
+    - path: data/processed/pd_patients.csv
+      hash: md5
+      md5: 81f9b4e9f79e341be3a8975462ba497c
+      size: 507096
+    - path: reports/metrics/validate.json
+      hash: md5
+      md5: 7a9794a6bcf85d0916a121f7b61b7084
+      size: 37
+  split:
+    cmd: python scripts/prepare_data.py --stage split
+    deps:
+    - path: data/processed/pd_longitudinal.csv
+      hash: md5
+      md5: afdfde8bf16ad0d9df94e599dfb03c40
+      size: 3378052
+    - path: src/parkinson_mm/data/split.py
+      hash: md5
+      md5: 51ef6bf0138e2a8570bb2e8f326d0a9d
+      size: 2264
+    params:
+      params.yaml:
+        split:
+          test_size: 0.2
+          n_folds: 5
+          seed: 42
+    outs:
+    - path: data/processed/splits.csv
+      hash: md5
+      md5: debd289eecb358954d00b5849e69c1c1
+      size: 19147
+  features:
+    cmd: python scripts/prepare_data.py --stage features
+    deps:
+    - path: data/processed/pd_longitudinal.csv
+      hash: md5
+      md5: afdfde8bf16ad0d9df94e599dfb03c40
+      size: 3378052
+    - path: data/processed/pd_patients.csv
+      hash: md5
+      md5: 81f9b4e9f79e341be3a8975462ba497c
+      size: 507096
+    - path: data/processed/splits.csv
+      hash: md5
+      md5: debd289eecb358954d00b5849e69c1c1
+      size: 19147
+    - path: src/parkinson_mm/features
+      hash: md5
+      md5: 46d37565f936a94a34e800b7ce457131.dir
+      size: 14048
+      nfiles: 8
+    params:
+      params.yaml:
+        samples:
+          min_gap_months: 3
+          max_gap_months: 24
+          max_seq_len: 12
+    outs:
+    - path: data/processed/pd_next_visit_samples.csv
+      hash: md5
+      md5: d7845f8cbaf4a97f3f6119ee59e5d934
+      size: 7478546
+  stats:
+    cmd: python scripts/run_stats.py
+    deps:
+    - path: data/processed/pd_longitudinal.csv
+      hash: md5
+      md5: afdfde8bf16ad0d9df94e599dfb03c40
+      size: 3378052
+    - path: data/processed/pd_patients.csv
+      hash: md5
+      md5: 81f9b4e9f79e341be3a8975462ba497c
+      size: 507096
+    - path: src/parkinson_mm/stats
+      hash: md5
+      md5: 4e12e905e4e89c5cb28da54c7156f66d.dir
+      size: 14384
+      nfiles: 8
+    params:
+      params.yaml:
+        stats:
+          fdr_alpha: 0.05
+          min_visits: 2
+          factors:
+            Âge à BL (par 10 ans): age10
+            Sexe masculin: male
+            Durée de maladie à BL (par an): dur_c
+            Phénotype PIGD: pigd_pheno
+            Hoehn & Yahr >= 2 à BL: hy2_bl
+            UPDRS I à BL (z): z_updrs1_bl
+            UPDRS II à BL (z): z_updrs2_bl
+            MoCA à BL (z): z_moca_bl
+            SCOPA-AUT à BL (z): z_scopa_aut_bl
+            Epworth à BL (z): z_ess_bl
+            GDS-15 à BL (z): z_gds_bl
+            STAI à BL (z): z_stai_bl
+            Années d'études (z): z_EDUCYRS
+            Antécédent familial PD: ANYFAMPD
+            Aβ42 LCR (z): z_csf_abeta42
+            Aβ42/40 LCR (z): z_csf_ab42_40
+            pTau181 LCR (z): z_csf_ptau181
+            α-synucléine LCR (z): z_csf_asyn
+            NfL plasma (z): z_plasma_nfl
+            GFAP plasma (z): z_plasma_gfap
+            SBR putamen BL (z): z_sbr_putamen_bl
+            SBR caudé BL (z): z_sbr_caudate_bl
+            Asymétrie putamen BL (z): z_sbr_put_asym_bl
+            IRM putamen (z): z_mri_putamen
+            IRM hippocampe (z): z_mri_hippocampus
+            IRM ventricules lat. (z): z_mri_lat_ventricles
+            IRM cortex (z): z_mri_cortex
+            Porteur LRRK2: lrrk2
+            Porteur GBA: gba
+            APOE ε4: apoe4
+            Score polygénique (z): z_prs
+          modality_chain:
+            M1_clinique:
+            - age_c
+            - male
+            - dur_c
+            - pigd_pheno
+            - z_updrs2_bl
+            - z_moca_bl
+            - z_scopa_aut_bl
+            M2_biologie:
+            - z_csf_ab42_40
+            - z_csf_ptau181
+            - z_plasma_nfl
+            M3_imagerie:
+            - z_sbr_caudate_bl
+            - z_sbr_putamen_bl
+            M4_genetique:
+            - lrrk2
+            - gba
+            - z_prs
+    outs:
+    - path: data/processed/pd_score_evolution.csv
+      hash: md5
+      md5: b07ba8d8e4e5d8f455cf334c193bebac
+      size: 118986
+    - path: reports/metrics/stats.json
+      hash: md5
+      md5: 0ddd8137396ba42a01d1737dace0d7ec
+      size: 1052
+    - path: reports/tables/stats
+      hash: md5
+      md5: d77fd194633618e63cf8e3d448ff7f54.dir
+      size: 5898
+      nfiles: 3
+  state:
+    cmd: python scripts/run_state.py
+    deps:
+    - path: data/processed/pd_longitudinal.csv
+      hash: md5
+      md5: afdfde8bf16ad0d9df94e599dfb03c40
+      size: 3378052
+    - path: data/processed/pd_next_visit_samples.csv
+      hash: md5
+      md5: d7845f8cbaf4a97f3f6119ee59e5d934
+      size: 7478546
+    - path: data/processed/pd_patients.csv
+      hash: md5
+      md5: 81f9b4e9f79e341be3a8975462ba497c
+      size: 507096
+    - path: data/processed/splits.csv
+      hash: md5
+      md5: debd289eecb358954d00b5849e69c1c1
+      size: 19147
+    - path: src/parkinson_mm/stats
+      hash: md5
+      md5: 4e12e905e4e89c5cb28da54c7156f66d.dir
+      size: 14384
+      nfiles: 8
+    params:
+      params.yaml:
+        evaluation.bootstrap_samples: 2000
+        stats.min_visits: 2
+    outs:
+    - path: data/processed/pd_score_etat.csv
+      hash: md5
+      md5: 46475c3c522093b6844a1c224c119415
+      size: 264920
+    - path: models/state_model.pkl
+      hash: md5
+      md5: fcdd5b5504b46cf8097cd2dcb45245fb
+      size: 547
+    - path: reports/metrics/state.json
+      hash: md5
+      md5: 887a2252fe8efd4684f5de3cf0ac0f19
+      size: 679
+    - path: reports/tables/state
+      hash: md5
+      md5: 08788cd89f167584c2299c772f2058f7.dir
+      size: 136453
+      nfiles: 1
+  train:
+    cmd: python scripts/train.py
+    deps:
+    - path: data/processed/pd_next_visit_samples.csv
+      hash: md5
+      md5: d7845f8cbaf4a97f3f6119ee59e5d934
+      size: 7478546
+    - path: src/parkinson_mm/models
+      hash: md5
+      md5: 806609ed47ff44ddbf265b4d2fed899f.dir
+      size: 12944
+      nfiles: 10
+    - path: src/parkinson_mm/training
+      hash: md5
+      md5: 08c34d7d96927f899ff082e75b568218.dir
+      size: 35196
+      nfiles: 19
+    params:
+      params.yaml:
+        experiments:
+        - name: Persistance
+          question: objectif2_score_futur
+          family: baseline
+          algo: persistence
+        - name: LightGBM (M1)
+          question: objectif2_score_futur
+          family: ml
+          algo: lgbm
+        - name: MLP – dernière visite (M1)
+          question: objectif2_score_futur
+          family: dl
+          algo: mlp
+        - name: GRU – trajectoire (M1)
+          question: objectif2_score_futur
+          family: dl
+          algo: gru
+        project.seed: 42
+        training:
+          epochs: 80
+          patience: 12
+          batch_size: 256
+          lr: 0.001
+          weight_decay: 0.0001
+          d: 64
+          dropout: 0.2
+          final_seeds: 3
+    outs:
+    - path: reports/metrics/cv.json
+      hash: md5
+      md5: dea834cc21de310622942e3d6f32f555
+      size: 486
+    - path: reports/tables/models/cv_predictions.csv
+      hash: md5
+      md5: 9bbc12f867118dac3ff0077ca2148034
+      size: 2328317
+    - path: reports/tables/models/cv_summary.csv
+      hash: md5
+      md5: d91ceea11be7b985019c62eba01add37
+      size: 353
+  evaluate:
+    cmd: python scripts/evaluate.py
+    deps:
+    - path: reports/tables/models/cv_summary.csv
+      hash: md5
+      md5: d91ceea11be7b985019c62eba01add37
+      size: 353
+    - path: src/parkinson_mm/evaluation
+      hash: md5
+      md5: 16cf67bd1cb8999dbe83aab80a0e271a.dir
+      size: 16015
+      nfiles: 9
+    - path: src/parkinson_mm/pipeline
+      hash: md5
+      md5: bd9d74c51e4cba818a465e9e8ca26664.dir
+      size: 54486
+      nfiles: 22
+    params:
+      params.yaml:
+        evaluation:
+          always_include:
+          - Persistance
+          - LightGBM (M1)
+          - MLP – dernière visite (M1)
+          - GRU – trajectoire (M1)
+          bootstrap_samples: 2000
+          interval_coverage: 0.8
+        promotion:
+          max_cv_mae_sd: 0.3
+        tracking:
+          uri: sqlite:///mlflow.db
+          experiment_prefix: parkinson-mm
+          registered_model: parkinson-next-visit-updrs3
+    outs:
+    - path: models/predictor.pkl
+      hash: md5
+      md5: 39c9fb41c6b4745bc28e2c4ada58721d
+      size: 755472
+    - path: reports/metrics/test.json
+      hash: md5
+      md5: ab288cca5c7f8ae9ec43b548222c5baf
+      size: 4042
+    - path: reports/tables/models/test_results.csv
+      hash: md5
+      md5: 206f4391d12d53f34df2c9b970429b53
+      size: 765
+  explain:
+    cmd: python scripts/explain.py
+    deps:
+    - path: models/predictor.pkl
+      hash: md5
+      md5: 39c9fb41c6b4745bc28e2c4ada58721d
+      size: 755472
+    - path: src/parkinson_mm/explainability
+      hash: md5
+      md5: 7a56a12cf628b859b8fa7fca920adad3.dir
+      size: 6146
+      nfiles: 3
+    params:
+      params.yaml:
+        explain:
+          n_repeats: 5
+    outs:
+    - path: reports/metrics/explain.json
+      hash: md5
+      md5: 9741dc3b223105cc89c474225d980604
+      size: 1106
+    - path: reports/tables/models/importance_permutation.csv
+      hash: md5
+      md5: 332094438e81d89556e884603469afd6
+      size: 444
+  horizons:
+    cmd: python scripts/run_horizons.py --stage data
+    deps:
+    - path: data/processed/pd_longitudinal.csv
+      hash: md5
+      md5: afdfde8bf16ad0d9df94e599dfb03c40
+      size: 3378052
+    - path: data/processed/pd_patients.csv
+      hash: md5
+      md5: 81f9b4e9f79e341be3a8975462ba497c
+      size: 507096
+    - path: data/processed/splits.csv
+      hash: md5
+      md5: debd289eecb358954d00b5849e69c1c1
+      size: 19147
+    - path: src/parkinson_mm/data/validation/horizons.py
+      hash: md5
+      md5: ea36890769c1170171dc5899a2ea8e95
+      size: 1297
+    - path: src/parkinson_mm/features/horizons.py
+      hash: md5
+      md5: b9eda23fa6dbed0f7e7c089c2097524b
+      size: 2945
+    params:
+      params.yaml:
+        horizons.auxiliary:
+        - updrs2
+        - moca
+        horizons.months:
+        - 12
+        - 24
+        - 36
+        horizons.tolerance_months: 3
+    outs:
+    - path: data/processed/pd_multi_horizon_samples.csv
+      hash: md5
+      md5: f578896ecc46aca0f7d4f71e5ae622e5
+      size: 7440894
+    - path: reports/metrics/horizons_data.json
+      hash: md5
+      md5: c77e5795206dbce1859417a188123d8f
+      size: 344
+  train_horizons:
+    cmd: python scripts/run_horizons.py --stage train
+    deps:
+    - path: data/processed/pd_longitudinal.csv
+      hash: md5
+      md5: afdfde8bf16ad0d9df94e599dfb03c40
+      size: 3378052
+    - path: data/processed/pd_multi_horizon_samples.csv
+      hash: md5
+      md5: f578896ecc46aca0f7d4f71e5ae622e5
+      size: 7440894
+    - path: src/parkinson_mm/features/grud.py
+      hash: md5
+      md5: 8a6aa6ebfac9f573a2225e1e25f0bac2
+      size: 2416
+    - path: src/parkinson_mm/models/grud.py
+      hash: md5
+      md5: e8b98ad5fb1aaed9c7dead782825433c
+      size: 1907
+    - path: src/parkinson_mm/models/multi_horizon.py
+      hash: md5
+      md5: 8f74d1573eeab025edb165cc938c1bf9
+      size: 2180
+    - path: src/parkinson_mm/pipeline/horizon_train.py
+      hash: md5
+      md5: 4bf0760ef8b1b8e6cc33a11040b931b1
+      size: 3416
+    - path: src/parkinson_mm/pipeline/horizon_tune.py
+      hash: md5
+      md5: 301305e9cc390e3ef0db6f8a99b82055
+      size: 1762
+    - path: src/parkinson_mm/training/horizon_cv.py
+      hash: md5
+      md5: c19abc124e271a77d323fb025579fe6f
+      size: 1684
+    - path: src/parkinson_mm/training/horizon_fit.py
+      hash: md5
+      md5: ff872ac402b1c163a59758d6a35f6ad7
+      size: 1791
+    - path: src/parkinson_mm/training/horizon_inputs.py
+      hash: md5
+      md5: 8a99db6cde140dcd794dfa1100d2bf42
+      size: 2738
+    - path: src/parkinson_mm/training/horizon_loop.py
+      hash: md5
+      md5: e97984a72e2a10e313b8ea685a0deac9
+      size: 2570
+    - path: src/parkinson_mm/training/horizon_loss.py
+      hash: md5
+      md5: 9e3c68639ff2ba41b5bb313dd002c90d
+      size: 1404
+    - path: src/parkinson_mm/training/horizon_model.py
+      hash: md5
+      md5: 3c421a23fd40f0b6855f3262ff95a616
+      size: 2854
+    - path: src/parkinson_mm/training/horizon_networks.py
+      hash: md5
+      md5: 82c20309b004988fb2c41994887f8c09
+      size: 2291
+    - path: src/parkinson_mm/training/horizon_tuning.py
+      hash: md5
+      md5: 303bb80951ed2467731fa298cbda02af
+      size: 1867
+    params:
+      params.yaml:
+        horizons:
+          months:
+          - 12
+          - 24
+          - 36
+          tolerance_months: 3
+          primary: 24
+          quantiles:
+          - 0.1
+          - 0.5
+          - 0.9
+          coverage_range:
+          - 0.75
+          - 0.85
+          auxiliary:
+          - updrs2
+          - moca
+          auxiliary_weight: 0.3
+          mcid_points: 3.25
+          final_seeds: 5
+          question: objectif2_multi_horizon
+          tuning:
+            trials: 20
+            folds:
+            - 0
+            - 1
+            spaces:
+              lgbm:
+                learning_rate:
+                  low: 0.01
+                  high: 0.1
+                  log: true
+                num_leaves:
+                - 7
+                - 15
+                - 31
+                - 63
+                min_child_samples:
+                - 20
+                - 40
+                - 80
+                colsample_bytree:
+                  low: 0.5
+                  high: 1.0
+              mlp: &id001
+                lr:
+                  low: 0.0001
+                  high: 0.003
+                  log: true
+                d:
+                - 32
+                - 64
+                - 128
+                dropout:
+                  low: 0.0
+                  high: 0.4
+                weight_decay:
+                  low: 1e-05
+                  high: 0.001
+                  log: true
+              grud: *id001
+          registered_model: parkinson-multi-horizon-updrs3
+          experiments:
+          - name: Persistance
+            family: baseline
+            algo: persistence
+          - name: LightGBM (un par horizon)
+            family: ml
+            algo: lgbm
+          - name: MLP – dernière visite, multi-sortie
+            family: dl
+            algo: mlp
+          - name: GRU-D multi-horizon
+            family: dl
+            algo: grud
+          ablations:
+          - name: GRU-D sans masques
+            family: dl
+            algo: grud
+            options:
+              masks: false
+          - name: GRU-D sans temps écoulé
+            family: dl
+            algo: grud
+            options:
+              decay: false
+          - name: GRU-D sans multitâche
+            family: dl
+            algo: grud
+            options:
+              auxiliary_weight: 0.0
+        project.seed: 42
+        samples.max_seq_len: 12
+        split.n_folds: 5
+        training:
+          epochs: 80
+          patience: 12
+          batch_size: 256
+          lr: 0.001
+          weight_decay: 0.0001
+          d: 64
+          dropout: 0.2
+          final_seeds: 3
+    outs:
+    - path: reports/metrics/horizons_cv.json
+      hash: md5
+      md5: 3998b8bd9a715c3296946a06097ddb00
+      size: 4116
+    - path: reports/metrics/horizons_reglages.json
+      hash: md5
+      md5: aeffc72da94897cfcae8c5df399a4ee8
+      size: 436
+    - path: reports/tables/horizons/cv_predictions.csv
+      hash: md5
+      md5: 9afff25ddfb422ad3eecb8adcebdf7af
+      size: 11445391
+    - path: reports/tables/horizons/cv_summary.csv
+      hash: md5
+      md5: 7ec9ff51e9de243d418a8a2115f3cde3
+      size: 1721
+  evaluate_horizons:
+    cmd: python scripts/run_horizons.py --stage evaluate
+    deps:
+    - path: data/processed/pd_score_evolution.csv
+      hash: md5
+      md5: b07ba8d8e4e5d8f455cf334c193bebac
+      size: 118986
+    - path: reports/metrics/horizons_reglages.json
+      hash: md5
+      md5: aeffc72da94897cfcae8c5df399a4ee8
+      size: 436
+    - path: reports/tables/horizons/cv_summary.csv
+      hash: md5
+      md5: 7ec9ff51e9de243d418a8a2115f3cde3
+      size: 1721
+    - path: src/parkinson_mm/evaluation/hypotheses.py
+      hash: md5
+      md5: bdea832dda219beb1d746c29d799446f
+      size: 2698
+    - path: src/parkinson_mm/pipeline/horizon_evaluate.py
+      hash: md5
+      md5: 8482ff449e37a5fa53c7910d6169b0b5
+      size: 3772
+    - path: src/parkinson_mm/pipeline/horizon_release.py
+      hash: md5
+      md5: 8e02375c03dc74a59900c2b0e82ea656
+      size: 3757
+    - path: src/parkinson_mm/serving/horizon_predictor.py
+      hash: md5
+      md5: 33d1623acbf6c17fc4303c00bee22f1e
+      size: 2438
+    params:
+      params.yaml:
+        evaluation.bootstrap_samples: 2000
+        horizons:
+          months:
+          - 12
+          - 24
+          - 36
+          tolerance_months: 3
+          primary: 24
+          quantiles:
+          - 0.1
+          - 0.5
+          - 0.9
+          coverage_range:
+          - 0.75
+          - 0.85
+          auxiliary:
+          - updrs2
+          - moca
+          auxiliary_weight: 0.3
+          mcid_points: 3.25
+          final_seeds: 5
+          question: objectif2_multi_horizon
+          tuning:
+            trials: 20
+            folds:
+            - 0
+            - 1
+            spaces:
+              lgbm:
+                learning_rate:
+                  low: 0.01
+                  high: 0.1
+                  log: true
+                num_leaves:
+                - 7
+                - 15
+                - 31
+                - 63
+                min_child_samples:
+                - 20
+                - 40
+                - 80
+                colsample_bytree:
+                  low: 0.5
+                  high: 1.0
+              mlp: &id002
+                lr:
+                  low: 0.0001
+                  high: 0.003
+                  log: true
+                d:
+                - 32
+                - 64
+                - 128
+                dropout:
+                  low: 0.0
+                  high: 0.4
+                weight_decay:
+                  low: 1e-05
+                  high: 0.001
+                  log: true
+              grud: *id002
+          registered_model: parkinson-multi-horizon-updrs3
+          experiments:
+          - name: Persistance
+            family: baseline
+            algo: persistence
+          - name: LightGBM (un par horizon)
+            family: ml
+            algo: lgbm
+          - name: MLP – dernière visite, multi-sortie
+            family: dl
+            algo: mlp
+          - name: GRU-D multi-horizon
+            family: dl
+            algo: grud
+          ablations:
+          - name: GRU-D sans masques
+            family: dl
+            algo: grud
+            options:
+              masks: false
+          - name: GRU-D sans temps écoulé
+            family: dl
+            algo: grud
+            options:
+              decay: false
+          - name: GRU-D sans multitâche
+            family: dl
+            algo: grud
+            options:
+              auxiliary_weight: 0.0
+        promotion:
+          max_cv_mae_sd: 0.3
+    outs:
+    - path: models/horizon_predictor.pkl
+      hash: md5
+      md5: 98e91c0f7d9eb947ab39933d401b2d17
+      size: 2948413
+    - path: reports/metrics/horizons_test.json
+      hash: md5
+      md5: aa4b1fdbfa123caa92ef5331bfae265f
+      size: 6045
+    - path: reports/tables/horizons/test_predictions.csv
+      hash: md5
+      md5: 16ca23389daea3db9e3a5e70272073c5
+      size: 1499704
+    - path: reports/tables/horizons/test_summary.csv
+      hash: md5
+      md5: b917ac265a1c9da11996d359798e2098
+      size: 3016
+  robustesse:
+    cmd: python scripts/run_robustesse.py
+    deps:
+    - path: data/processed/pd_next_visit_samples.csv
+      hash: md5
+      md5: d7845f8cbaf4a97f3f6119ee59e5d934
+      size: 7478546
+    - path: reports/tables/models/cv_predictions.csv
+      hash: md5
+      md5: 9bbc12f867118dac3ff0077ca2148034
+      size: 2328317
+    - path: src/parkinson_mm/evaluation/conformal.py
+      hash: md5
+      md5: 989b1b7648b92f2a03e68e05f2b02a1a
+      size: 1631
+    - path: src/parkinson_mm/evaluation/robustness.py
+      hash: md5
+      md5: 4f869f52d50e21ce021ac7d01c01dd8b
+      size: 1326
+    - path: src/parkinson_mm/evaluation/subgroups.py
+      hash: md5
+      md5: 526bec884b7fe9e2d567bc2b64805405
+      size: 1553
+    - path: src/parkinson_mm/pipeline/robustness_stage.py
+      hash: md5
+      md5: fefcbdc75c6cb74590851b6928b2d3e4
+      size: 3305
+    params:
+      params.yaml:
+        evaluation.bootstrap_samples: 2000
+        robustesse:
+          question: objectif2_robustesse
+          modele: GRU – trajectoire (M1)
+          reference: Persistance
+          niveau: 0.8
+    outs:
+    - path: reports/figures/robustesse
+      hash: md5
+      md5: 96c81a6bf03479d49bf4a260ef3efad7.dir
+      size: 374276
+      nfiles: 3
+    - path: reports/metrics/robustesse.json
+      hash: md5
+      md5: 9dca62b7fbc60e12b76f796d68e9ef12
+      size: 413
+    - path: reports/tables/robustesse
+      hash: md5
+      md5: 0119560c0d48538397c1e1c93dc5d00e.dir
+      size: 5753
+      nfiles: 2
+  reference_etat:
+    cmd: python scripts/run_reference_etat.py
+    deps:
+    - path: data/processed/pd_next_visit_samples.csv
+      hash: md5
+      md5: d7845f8cbaf4a97f3f6119ee59e5d934
+      size: 7478546
+    - path: reports/tables/models/cv_predictions.csv
+      hash: md5
+      md5: 9bbc12f867118dac3ff0077ca2148034
+      size: 2328317
+    - path: src/parkinson_mm/analysis
+      hash: md5
+      md5: 5d6bf6935955ff2ddaca560340d8ff3d.dir
+      size: 25256
+      nfiles: 11
+    - path: src/parkinson_mm/evaluation/bootstrap.py
+      hash: md5
+      md5: 02a437f4aa831bf49330557fbc6840d2
+      size: 2594
+    - path: src/parkinson_mm/evaluation/metrics.py
+      hash: md5
+      md5: e16c7724a582ee6c767f8fa138d0493e
+      size: 2371
+    params:
+      params.yaml:
+        evaluation.bootstrap_samples: 2000
+        reference_etat:
+          question: objectif2_score_futur
+          persistance: Persistance
+          statistique: median
+    outs:
+    - path: reports/metrics/reference_etat.json
+      hash: md5
+      md5: 27d662cfc066aa9ed597aad1b58a5f44
+      size: 252
+    - path: reports/tables/reference_etat
+      hash: md5
+      md5: a6c57033831104c140b483ca6baf2416.dir
+      size: 2552
+      nfiles: 3
+  reference_horizons:
+    cmd: python scripts/run_reference_horizons.py
+    deps:
+    - path: data/processed/pd_multi_horizon_samples.csv
+      hash: md5
+      md5: f578896ecc46aca0f7d4f71e5ae622e5
+      size: 7440894
+    - path: reports/tables/horizons/cv_predictions.csv
+      hash: md5
+      md5: 9afff25ddfb422ad3eecb8adcebdf7af
+      size: 11445391
+    - path: src/parkinson_mm/analysis
+      hash: md5
+      md5: 5d6bf6935955ff2ddaca560340d8ff3d.dir
+      size: 25256
+      nfiles: 11
+    - path: src/parkinson_mm/evaluation/bootstrap.py
+      hash: md5
+      md5: 02a437f4aa831bf49330557fbc6840d2
+      size: 2594
+    - path: src/parkinson_mm/evaluation/horizon_metrics.py
+      hash: md5
+      md5: 8359531fd70d221d98d92341650c41ba
+      size: 2603
+    params:
+      params.yaml:
+        evaluation.bootstrap_samples: 2000
+        horizons.mcid_points: 3.25
+        horizons.months:
+        - 12
+        - 24
+        - 36
+        reference_etat:
+          question: objectif2_score_futur
+          persistance: Persistance
+          statistique: median
+    outs:
+    - path: reports/metrics/reference_horizons.json
+      hash: md5
+      md5: 7d109e049ccd3c708e19e95ed2a9a389
+      size: 2352
+    - path: reports/tables/reference_horizons
+      hash: md5
+      md5: 908fdf615019e5d2a2da9e6db27561ea.dir
+      size: 2677
+      nfiles: 2
+  etat_cv:
+    cmd: python scripts/run_etat_cv.py
+    deps:
+    - path: data/processed/pd_longitudinal.csv
+      hash: md5
+      md5: afdfde8bf16ad0d9df94e599dfb03c40
+      size: 3378052
+    - path: data/processed/pd_next_visit_samples.csv
+      hash: md5
+      md5: d7845f8cbaf4a97f3f6119ee59e5d934
+      size: 7478546
+    - path: data/processed/pd_patients.csv
+      hash: md5
+      md5: 81f9b4e9f79e341be3a8975462ba497c
+      size: 507096
+    - path: data/processed/splits.csv
+      hash: md5
+      md5: debd289eecb358954d00b5849e69c1c1
+      size: 19147
+    - path: reports/tables/models/cv_predictions.csv
+      hash: md5
+      md5: 9bbc12f867118dac3ff0077ca2148034
+      size: 2328317
+    - path: src/parkinson_mm/analysis
+      hash: md5
+      md5: 5d6bf6935955ff2ddaca560340d8ff3d.dir
+      size: 25256
+      nfiles: 11
+    - path: src/parkinson_mm/stats
+      hash: md5
+      md5: 4e12e905e4e89c5cb28da54c7156f66d.dir
+      size: 14384
+      nfiles: 8
+    params:
+      params.yaml:
+        evaluation.bootstrap_samples: 2000
+        reference_etat:
+          question: objectif2_score_futur
+          persistance: Persistance
+          statistique: median
+        stats.min_visits: 2
+    outs:
+    - path: reports/metrics/etat_cv.json
+      hash: md5
+      md5: e6b6f64ea304545ed53851ea266330f7
+      size: 1643
+    - path: reports/tables/etat_cv
+      hash: md5
+      md5: 7583aefbb9c6d1b15b9a33e677428398.dir
+      size: 1367
+      nfiles: 2
+  stats_sensibilite:
+    cmd: python scripts/run_stats_sensibilite.py
+    deps:
+    - path: data/processed/pd_longitudinal.csv
+      hash: md5
+      md5: afdfde8bf16ad0d9df94e599dfb03c40
+      size: 3378052
+    - path: data/processed/pd_patients.csv
+      hash: md5
+      md5: 81f9b4e9f79e341be3a8975462ba497c
+      size: 507096
+    - path: src/parkinson_mm/analysis
+      hash: md5
+      md5: 5d6bf6935955ff2ddaca560340d8ff3d.dir
+      size: 25256
+      nfiles: 11
+    - path: src/parkinson_mm/stats
+      hash: md5
+      md5: 4e12e905e4e89c5cb28da54c7156f66d.dir
+      size: 14384
+      nfiles: 8
+    params:
+      params.yaml:
+        stats.min_visits: 2
+    outs:
+    - path: reports/metrics/stats_sensibilite.json
+      hash: md5
+      md5: d0660107086d27b026a5f3d8dc33da08
+      size: 2141
+    - path: reports/tables/stats_sensibilite
+      hash: md5
+      md5: 2c3ada13a8ab7cbf1ec220f2a66adffc.dir
+      size: 1291
+      nfiles: 2
+  sensibilite:
+    cmd: python scripts/run_sensibilite.py
+    deps:
+    - path: data/processed/pd_longitudinal.csv
+      hash: md5
+      md5: afdfde8bf16ad0d9df94e599dfb03c40
+      size: 3378052
+    - path: data/processed/pd_next_visit_samples.csv
+      hash: md5
+      md5: d7845f8cbaf4a97f3f6119ee59e5d934
+      size: 7478546
+    - path: reports/tables/models/cv_predictions.csv
+      hash: md5
+      md5: 9bbc12f867118dac3ff0077ca2148034
+      size: 2328317
+    - path: src/parkinson_mm/analysis
+      hash: md5
+      md5: 5d6bf6935955ff2ddaca560340d8ff3d.dir
+      size: 25256
+      nfiles: 11
+    - path: src/parkinson_mm/features
+      hash: md5
+      md5: 46d37565f936a94a34e800b7ce457131.dir
+      size: 14048
+      nfiles: 8
+    - path: src/parkinson_mm/models
+      hash: md5
+      md5: 806609ed47ff44ddbf265b4d2fed899f.dir
+      size: 12944
+      nfiles: 10
+    - path: src/parkinson_mm/training
+      hash: md5
+      md5: 08c34d7d96927f899ff082e75b568218.dir
+      size: 35196
+      nfiles: 19
+    params:
+      params.yaml:
+        evaluation.bootstrap_samples: 2000
+        sensibilite:
+          question: objectif2_score_futur
+          variantes:
+            sans état cible:
+              retirer:
+              - target_off
+              - target_on
+              - target_untreated
+              modeles:
+              - LightGBM (M1)
+              - MLP – dernière visite (M1)
+              - GRU – trajectoire (M1)
+              face_persistance: true
+            une seule visite:
+              retirer:
+              - np3_prev
+              - np3_slope_hist
+              - np3_mean_hist
+              - n_prior
+              - dt_prev
+              modeles:
+              - LightGBM (M1)
+              - MLP – dernière visite (M1)
+        split.n_folds: 5
+        training:
+          epochs: 80
+          patience: 12
+          batch_size: 256
+          lr: 0.001
+          weight_decay: 0.0001
+          d: 64
+          dropout: 0.2
+          final_seeds: 3
+    outs:
+    - path: reports/metrics/sensibilite.json
+      hash: md5
+      md5: 5c54f354025f3c04271c91322c6a2a59
+      size: 1935
+    - path: reports/tables/sensibilite
+      hash: md5
+      md5: 84ca55b2abccc44af69db579f6cec78c.dir
+      size: 4012200
+      nfiles: 3
+  rag_index:
+    cmd: python scripts/build_rag_index.py
+    deps:
+    - path: README.md
+      hash: md5
+      md5: 06d87f956b8289302c26c6eaaf5ecb51
+      size: 19960
+    - path: rag/corpus
+      hash: md5
+      md5: 0001c90d0623351bfdc1856cb8bd3408.dir
+      size: 8145684
+      nfiles: 4
+    - path: rag/manifest.yaml
+      hash: md5
+      md5: f5617db8b5b307a2756ef605bcd127f0
+      size: 1358
+    - path: src/parkinson_mm/rag/chunks.py
+      hash: md5
+      md5: ee5ac4d97d6fb7242fed2249f7c71c22
+      size: 760
+    - path: src/parkinson_mm/rag/corpus.py
+      hash: md5
+      md5: d78529ab4dbafcf5e65db963f4460939
+      size: 1677
+    - path: src/parkinson_mm/rag/embed.py
+      hash: md5
+      md5: 81d2f8124dccaf5f57f7ef8497225f15
+      size: 1918
+    - path: src/parkinson_mm/rag/extract.py
+      hash: md5
+      md5: 7e311d28f3c90e6899d5fdfdd8e42b6c
+      size: 1552
+    - path: src/parkinson_mm/rag/index.py
+      hash: md5
+      md5: 4e375f5e130a7fc93b2d450a4da7e26d
+      size: 2125
+    params:
+      params.yaml:
+        rag.chunk_overlap: 150
+        rag.chunk_size: 1000
+        rag.embedding_model: intfloat/multilingual-e5-small
+        rag.manifest: rag/manifest.yaml
+    outs:
+    - path: rag/index
+      hash: md5
+      md5: adaf1f9f99f9bc0d3d46c575c88de04a.dir
+      size: 1046097
+      nfiles: 3
+  rag_eval:
+    cmd: python scripts/eval_rag.py
+    deps:
+    - path: rag/eval/questions.yaml
+      hash: md5
+      md5: 235b6d5fe967d2bc72f4d8fe1eb61183
+      size: 3865
+    - path: rag/index
+      hash: md5
+      md5: adaf1f9f99f9bc0d3d46c575c88de04a.dir
+      size: 1046097
+      nfiles: 3
+    - path: src/parkinson_mm/rag
+      hash: md5
+      md5: f0c24d081a3ddfd22696b9d2e3043721.dir
+      size: 21269
+      nfiles: 13
+    params:
+      params.yaml:
+        rag.k: 5
+        rag.questions: rag/eval/questions.yaml
+    outs:
+    - path: reports/metrics/rag.json
+      hash: md5
+      md5: a167f0d02390649bbd76293af7f71f30
+      size: 130
